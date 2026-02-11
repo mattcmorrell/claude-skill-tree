@@ -1,0 +1,218 @@
+[
+  {
+    "id": "create-project",
+    "name": "Create a New Project",
+    "branch": "foundations",
+    "color": "#c0c0c0",
+    "prerequisites": [],
+    "description": "Create a new directory and initialize a project from scratch.",
+    "position": { "x": 400, "y": 370 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["mkdir\\s+", "npx\\s+create-", "npm\\s+init", "yarn\\s+create", "pnpm\\s+create"]
+    }
+  },
+  {
+    "id": "run-dev-server",
+    "name": "Run a Dev Server",
+    "branch": "foundations",
+    "color": "#c0c0c0",
+    "prerequisites": ["create-project"],
+    "description": "Start a local development server and preview your work in the browser.",
+    "position": { "x": 400, "y": 290 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["npm\\s+(run\\s+)?(dev|start|serve)", "npx\\s+(vite|next|serve|live-server|http-server)", "python.*http\\.server", "yarn\\s+(dev|start)"]
+    }
+  },
+  {
+    "id": "use-screenshots",
+    "name": "Use Screenshots for Feedback",
+    "branch": "foundations",
+    "color": "#c0c0c0",
+    "prerequisites": ["run-dev-server"],
+    "description": "Take a screenshot and use it to give Claude visual feedback on your work.",
+    "position": { "x": 400, "y": 210 },
+    "detection": {
+      "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
+      "command_patterns": []
+    }
+  },
+  {
+    "id": "setup-github",
+    "name": "Set Up GitHub",
+    "branch": "git",
+    "color": "#00ff88",
+    "prerequisites": ["create-project"],
+    "description": "Initialize a git repo and connect it to GitHub.",
+    "position": { "x": 240, "y": 330 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+remote\\s+add", "gh\\s+repo\\s+create", "git\\s+clone\\s+", "git\\s+init"]
+    }
+  },
+  {
+    "id": "use-branch",
+    "name": "Use a GitHub Branch",
+    "branch": "git",
+    "color": "#00ff88",
+    "prerequisites": ["setup-github"],
+    "description": "Create and switch to a new branch for your work.",
+    "position": { "x": 160, "y": 270 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+checkout\\s+-b\\s+", "git\\s+switch\\s+-c\\s+", "git\\s+branch\\s+(?!-d|-D)\\w+"]
+    }
+  },
+  {
+    "id": "push-to-main",
+    "name": "Push to Main",
+    "branch": "git",
+    "color": "#00ff88",
+    "prerequisites": ["use-branch"],
+    "description": "Merge your work and push it back to the main branch.",
+    "position": { "x": 90, "y": 200 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+push(\\s+(-u\\s+)?origin)?\\s+(main|master)", "gh\\s+pr\\s+merge"]
+    }
+  },
+  {
+    "id": "connect-figma",
+    "name": "Connect Figma MCP",
+    "branch": "figma",
+    "color": "#a855f7",
+    "prerequisites": ["create-project"],
+    "description": "Use the Figma MCP to connect your designs to Claude Code.",
+    "position": { "x": 560, "y": 330 },
+    "detection": {
+      "tool_name_pattern": "mcp__figma-desktop__.*",
+      "command_patterns": []
+    }
+  },
+  {
+    "id": "build-from-figma",
+    "name": "Build a Screen from Figma",
+    "branch": "figma",
+    "color": "#a855f7",
+    "prerequisites": ["connect-figma"],
+    "description": "Use a Figma link to generate a full screen of code.",
+    "position": { "x": 640, "y": 270 },
+    "detection": {
+      "tool_name": "mcp__figma-desktop__get_design_context",
+      "command_patterns": []
+    }
+  },
+  {
+    "id": "iterate-with-screenshots",
+    "name": "Iterate with Screenshots",
+    "branch": "figma",
+    "color": "#a855f7",
+    "prerequisites": ["build-from-figma", "use-screenshots"],
+    "description": "Use screenshots to compare your build to the Figma design and iterate.",
+    "position": { "x": 710, "y": 200 },
+    "detection": {
+      "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
+      "command_patterns": [],
+      "requires_skills": ["build-from-figma", "use-screenshots"]
+    }
+  },
+  {
+    "id": "build-multiple-screens",
+    "name": "Build Multiple Screens",
+    "branch": "figma",
+    "color": "#a855f7",
+    "prerequisites": ["build-from-figma"],
+    "description": "Build more than one screen from your Figma file.",
+    "position": { "x": 710, "y": 340 },
+    "detection": {
+      "tool_name": "mcp__figma-desktop__get_design_context",
+      "command_patterns": [],
+      "track_unique_node_ids": true,
+      "required_count": 2
+    }
+  },
+  {
+    "id": "create-chatbot",
+    "name": "Create a Chatbot (LLM Key)",
+    "branch": "features",
+    "color": "#ff8800",
+    "prerequisites": ["run-dev-server"],
+    "description": "Build a project that uses an LLM API key, like a chatbot.",
+    "position": { "x": 570, "y": 490 },
+    "detection": {
+      "tool_name_pattern": "Bash|Write|Edit",
+      "command_patterns": ["npm\\s+install.*(openai|anthropic|@google\\/generative|@ai-sdk)", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"],
+      "file_patterns": ["\\.env"]
+    }
+  },
+  {
+    "id": "use-playwright",
+    "name": "Use Playwright to Test",
+    "branch": "features",
+    "color": "#ff8800",
+    "prerequisites": ["run-dev-server"],
+    "description": "Use Playwright to navigate to your local site and verify it works.",
+    "position": { "x": 570, "y": 570 },
+    "detection": {
+      "tool_name": "mcp__playwright__browser_navigate",
+      "command_patterns": [],
+      "url_pattern": "(localhost|127\\.0\\.0\\.1)"
+    }
+  },
+  {
+    "id": "deploy",
+    "name": "Deploy to a Public URL",
+    "branch": "deploy",
+    "color": "#3b82f6",
+    "prerequisites": ["run-dev-server"],
+    "description": "Deploy your project so anyone can see it at a public URL.",
+    "position": { "x": 400, "y": 570 },
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["netlify\\s+deploy", "vercel(\\s|$)", "npm\\s+run\\s+deploy", "firebase\\s+deploy", "gh-pages", "surge\\s+", "fly\\s+deploy", "wrangler\\s+(deploy|publish)", "railway\\s+up"]
+    }
+  },
+  {
+    "id": "edit-claude-md",
+    "name": "Edit CLAUDE.md",
+    "branch": "mastery",
+    "color": "#ffd700",
+    "prerequisites": ["create-project"],
+    "description": "Customize Claude's behavior by editing the CLAUDE.md file.",
+    "position": { "x": 230, "y": 490 },
+    "detection": {
+      "tool_name_pattern": "Write|Edit",
+      "command_patterns": [],
+      "file_pattern": "CLAUDE\\.md$"
+    }
+  },
+  {
+    "id": "create-intent-md",
+    "name": "Create INTENT.md",
+    "branch": "mastery",
+    "color": "#ffd700",
+    "prerequisites": ["edit-claude-md"],
+    "description": "Create an INTENT.md file to preserve context across sessions.",
+    "position": { "x": 230, "y": 570 },
+    "detection": {
+      "tool_name_pattern": "Write|Edit",
+      "command_patterns": [],
+      "file_pattern": "INTENT\\.md$"
+    }
+  },
+  {
+    "id": "create-skill",
+    "name": "Create a Claude Skill",
+    "branch": "mastery",
+    "color": "#ffd700",
+    "prerequisites": ["edit-claude-md"],
+    "description": "Create a custom Claude Code skill (slash command).",
+    "position": { "x": 150, "y": 530 },
+    "detection": {
+      "tool_name_pattern": "Write",
+      "command_patterns": [],
+      "file_pattern": "\\.claude/(commands|skills)/.*\\.(md|yaml)$"
+    }
+  }
+]

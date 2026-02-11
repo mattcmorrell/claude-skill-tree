@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Skill Tree</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Claude Code <span class="accent">Skill Tree</span></h1>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+      <span class="progress-text" id="progressText">0 / 16</span>
+    </div>
+  </div>
+
+  <div class="tree-container" id="treeContainer">
+    <svg id="treeSvg" viewBox="0 0 800 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Glow filters for each branch color -->
+        <filter id="glow-silver" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#c0c0c0" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#00ff88" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#a855f7" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#ff8800" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#3b82f6" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#ffd700" flood-opacity="0.6"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-pulse" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="blur"/>
+          <feFlood flood-color="#00d4ff" flood-opacity="0.4"/>
+          <feComposite in2="blur" operator="in"/>
+          <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Connection lines will be drawn here -->
+      <g id="connections"></g>
+      <!-- Nodes will be drawn here -->
+      <g id="nodes"></g>
+    </svg>
+  </div>
+
+  <!-- Skill detail panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-close" id="detailClose">&times;</div>
+    <div class="detail-branch" id="detailBranch"></div>
+    <h2 class="detail-name" id="detailName"></h2>
+    <p class="detail-desc" id="detailDesc"></p>
+    <div class="detail-status" id="detailStatus"></div>
+    <button class="detail-toggle" id="detailToggle">Mark Complete</button>
+  </div>
+
+  <!-- Achievement toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Branch labels -->
+  <div class="branch-labels" id="branchLabels"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "claude-skill-tree",
+  "version": "1.0.0",
+  "description": "Gamified skill tree for designers learning Claude Code",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
