@@ -90,6 +90,39 @@
     });
   }
 
+  // Draw branch labels
+  function drawBranchLabels() {
+    // Remove existing labels
+    document.querySelectorAll('.svg-branch-label').forEach(el => el.remove());
+
+    const labelsGroup = document.getElementById('connections');
+    const branches = [
+      { name: 'CLAUDE MASTERY', color: '#ffd700', x: 65, y: 145 },
+      { name: 'GIT & GITHUB', color: '#00ff88', x: 140, y: 135 },
+      { name: 'FOUNDATIONS', color: '#c0c0c0', x: 390, y: 258 },
+      { name: 'FIGMA TO CODE', color: '#a855f7', x: 665, y: 145 },
+      { name: 'SHIP IT', color: '#3b82f6', x: 490, y: 258 },
+      { name: 'FEATURES', color: '#ff8800', x: 540, y: 145 }
+    ];
+
+    branches.forEach(b => {
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', b.x);
+      text.setAttribute('y', b.y);
+      text.classList.add('svg-branch-label');
+      text.style.fill = b.color;
+      text.style.fontSize = '8px';
+      text.style.fontFamily = "'SF Mono', 'Fira Code', monospace";
+      text.style.fontWeight = '700';
+      text.style.letterSpacing = '2px';
+      text.style.textAnchor = 'middle';
+      text.style.opacity = '0.35';
+      text.style.pointerEvents = 'none';
+      text.textContent = b.name;
+      labelsGroup.appendChild(text);
+    });
+  }
+
   // Draw nodes
   function drawNodes() {
     const nodesGroup = document.getElementById('nodes');
@@ -188,6 +221,7 @@
   // Full render
   function render() {
     drawConnections();
+    drawBranchLabels();
     drawNodes();
     updateProgressBar();
 
