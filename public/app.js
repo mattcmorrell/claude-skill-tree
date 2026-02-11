@@ -197,11 +197,39 @@
     }
   }
 
-  // Detail panel
-  function openDetail(skill) {
+  // Detail panel — position next to clicked node
+  function openDetail(skill, event) {
     selectedSkill = skill;
     updateDetailPanel(skill);
-    document.getElementById('detailPanel').classList.add('open');
+
+    const panel = document.getElementById('detailPanel');
+    const svg = document.getElementById('treeSvg');
+    const svgRect = svg.getBoundingClientRect();
+
+    // Convert SVG coordinates to screen coordinates
+    const svgWidth = 800;
+    const svgHeight = 700;
+    const scaleX = svgRect.width / svgWidth;
+    const scaleY = svgRect.height / svgHeight;
+    const screenX = svgRect.left + skill.position.x * scaleX;
+    const screenY = svgRect.top + skill.position.y * scaleY;
+
+    // Position panel to the right of the node, or left if it would overflow
+    const panelWidth = 300;
+    const gap = 20;
+    let left = screenX + NODE_RADIUS * scaleX + gap;
+    let top = screenY - 40;
+
+    // Flip to left side if overflowing right
+    if (left + panelWidth > window.innerWidth - 16) {
+      left = screenX - NODE_RADIUS * scaleX - gap - panelWidth;
+    }
+    // Clamp vertical position
+    top = Math.max(16, Math.min(top, window.innerHeight - 280));
+
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+    panel.classList.add('open');
   }
 
   function updateDetailPanel(skill) {
@@ -238,6 +266,16 @@
 
   document.getElementById('detailClose').addEventListener('click', () => {
     document.getElementById('detailPanel').classList.remove('open');
+    selectedSkill = null;
+  });
+
+  // Close panel when clicking outside
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('detailPanel');
+    if (!panel.classList.contains('open')) return;
+    if (panel.contains(e.target)) return;
+    if (e.target.closest('.node-group')) return;
+    panel.classList.remove('open');
     selectedSkill = null;
   });
 
