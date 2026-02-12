@@ -93,7 +93,7 @@ body::before {
 }
 
 #treeSvg {
-  max-width: 900px;
+  max-width: 1100px;
   max-height: 100%;
   width: 100%;
 }
@@ -137,9 +137,15 @@ body::before {
   transition: opacity 0.3s ease;
 }
 
+/* Node icon paths */
+.node-icon {
+  pointer-events: none;
+  transition: stroke 0.3s ease;
+}
+
 /* Connection lines */
 .connection-line {
-  stroke: #3a3a5a;
+  stroke: #5a5a80;
   stroke-width: 2;
   fill: none;
   transition: stroke 0.5s ease, stroke-opacity 0.5s ease;
@@ -147,7 +153,7 @@ body::before {
 
 .connection-line.active {
   stroke-width: 2;
-  stroke-opacity: 0.6;
+  stroke-opacity: 0.4;
 }
 
 .connection-line.completed {
@@ -157,17 +163,21 @@ body::before {
 
 /* Node states */
 .node-locked .node-circle {
-  fill: #1e1e38;
-  stroke: #3a3a5a;
+  fill: #3a3a65;
+  stroke: #7070a0;
   stroke-width: 2;
 }
 
 .node-locked .node-number {
-  fill: #6a6a80;
+  fill: #b0b0c8;
+}
+
+.node-locked .node-icon {
+  stroke: #b0b0c8;
 }
 
 .node-locked .node-label {
-  fill: #6a6a80;
+  fill: #a0a0b8;
 }
 
 .node-available .node-circle {
@@ -187,6 +197,11 @@ body::before {
   opacity: 0.7;
 }
 
+.node-available .node-icon {
+  stroke: #00d4ff;
+  opacity: 0.7;
+}
+
 .node-completed .node-label {
   fill: #ddd;
   font-weight: 600;
@@ -198,6 +213,53 @@ body::before {
 
 .node-completed .node-check {
   opacity: 1;
+}
+
+/* Branch progress indicators */
+.branch-progress {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 9px;
+  text-anchor: middle;
+  pointer-events: none;
+  letter-spacing: 1px;
+}
+
+/* START HERE callout */
+@keyframes start-pulse-ring {
+  0% { r: 28; opacity: 0.6; }
+  100% { r: 48; opacity: 0; }
+}
+
+@keyframes start-bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes start-glow-text {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.start-here-ring {
+  fill: none;
+  stroke: #00d4ff;
+  stroke-width: 2;
+  animation: start-pulse-ring 1.5s ease-out infinite;
+}
+
+.start-here-arrow {
+  fill: #00d4ff;
+  animation: start-bounce-arrow 1s ease-in-out infinite;
+}
+
+.start-here-text {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  fill: #00d4ff;
+  text-anchor: middle;
+  letter-spacing: 3px;
+  animation: start-glow-text 1.5s ease-in-out infinite;
 }
 
 /* Unlock animation */
@@ -212,22 +274,8 @@ body::before {
   100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes particle-out {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--px), var(--py)) scale(0); opacity: 0; }
-}
-
 .node-unlocking {
   animation: unlock-burst 0.6s ease-out;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: particle-out 0.8s ease-out forwards;
 }
 
 /* Detail panel — popover next to node */
