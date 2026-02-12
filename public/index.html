@@ -16,7 +16,7 @@
   </div>
 
   <div class="tree-container" id="treeContainer">
-    <svg id="treeSvg" viewBox="0 0 1000 850" xmlns="http://www.w3.org/2000/svg">
+    <svg id="treeSvg" viewBox="0 0 1200 850" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <!-- Glow filters for each branch color -->
         <filter id="glow-silver" x="-50%" y="-50%" width="200%" height="200%">
@@ -71,12 +71,23 @@
     </svg>
   </div>
 
+  <!-- Hover tooltip -->
+  <div class="hover-tooltip" id="hoverTooltip">
+    <div class="tooltip-name" id="tooltipName"></div>
+    <div class="tooltip-desc" id="tooltipDesc"></div>
+    <div class="tooltip-difficulty" id="tooltipDifficulty"></div>
+  </div>
+
   <!-- Skill detail panel -->
   <div class="detail-panel" id="detailPanel">
     <div class="detail-close" id="detailClose">&times;</div>
-    <div class="detail-branch" id="detailBranch"></div>
+    <div class="detail-header-row">
+      <div class="detail-branch" id="detailBranch"></div>
+      <div class="detail-difficulty" id="detailDifficulty"></div>
+    </div>
     <h2 class="detail-name" id="detailName"></h2>
     <p class="detail-desc" id="detailDesc"></p>
+    <div class="detail-try-it" id="detailTryIt"></div>
     <div class="detail-status" id="detailStatus"></div>
     <button class="detail-toggle" id="detailToggle">Mark Complete</button>
   </div>

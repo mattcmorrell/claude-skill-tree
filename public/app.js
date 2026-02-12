@@ -44,17 +44,20 @@
     'deploy': 'M10 18V6M10 2l-1 4h2l-1-4zM6 10l4-4 4 4M4 14c0 2 2.7 4 6 4s6-2 6-4', // rocket
     'edit-claude-md': 'M3 17.5V14l10-10 3.5 3.5L6.5 17.5H3zM11 6l3.5 3.5', // pencil
     'create-intent-md': 'M5 2h8l4 4v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2zm7 1v4h4M7 10h6M7 13h6M7 16h3', // document
-    'create-skill': 'M10 1l2.5 6H19l-5.3 4 2 6.3L10 13.5l-5.7 3.8 2-6.3L1 7h6.5L10 1z' // star/lightning
+    'create-skill': 'M10 1l2.5 6H19l-5.3 4 2 6.3L10 13.5l-5.7 3.8 2-6.3L1 7h6.5L10 1z', // star/lightning
+    'describe-and-build': 'M3 3h14v14H3V3zm3 4h8M6 9h8M6 11h5', // wireframe/layout
+    'clone-and-modify': 'M6 2v6l-4 4 4 4v4h2v-3l4-4-4-4V4h6v6l4 4-4 4v2h2v-1l4-4-4-4V2H6z', // clone fork
+    'download-bhr': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2' // download arrow
   };
 
   // Feature 4: Zone definitions for colored backgrounds
   const ZONE_DEFS = [
-    { branch: 'mastery', cx: 150, cy: 470, rx: 110, ry: 150 },
-    { branch: 'git', cx: 350, cy: 370, rx: 70, ry: 240 },
-    { branch: 'foundations', cx: 490, cy: 570, rx: 80, ry: 240 },
-    { branch: 'deploy', cx: 540, cy: 370, rx: 50, ry: 50 },
-    { branch: 'features', cx: 700, cy: 370, rx: 90, ry: 60 },
-    { branch: 'figma', cx: 860, cy: 370, rx: 120, ry: 240 }
+    { branch: 'mastery', cx: 180, cy: 470, rx: 120, ry: 150 },
+    { branch: 'git', cx: 370, cy: 370, rx: 160, ry: 250 },
+    { branch: 'foundations', cx: 630, cy: 620, rx: 130, ry: 200 },
+    { branch: 'deploy', cx: 630, cy: 370, rx: 50, ry: 50 },
+    { branch: 'features', cx: 780, cy: 300, rx: 120, ry: 140 },
+    { branch: 'figma', cx: 1000, cy: 370, rx: 140, ry: 250 }
   ];
 
   let skills = [];
@@ -74,13 +77,10 @@
     progress = await res.json();
   }
 
-  // Determine node state
+  // Determine node state — all skills are always available (no locked state)
   function getNodeState(skill) {
     if (progress.skills[skill.id]?.completed) return 'completed';
-    const prereqsMet = skill.prerequisites.every(
-      pid => progress.skills[pid]?.completed
-    );
-    return prereqsMet ? 'available' : 'locked';
+    return 'available';
   }
 
   // Helper: is a color "light" enough to need dark icon contrast?
@@ -89,6 +89,34 @@
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return (r * 0.299 + g * 0.587 + b * 0.114) > 160;
+  }
+
+  // Get recommended next skill — the available skill that unlocks the most downstream skills
+  function getRecommendedNext() {
+    const available = skills.filter(s => getNodeState(s) === 'available');
+    if (available.length === 0) return null;
+    if (available.length === 1) return available[0].id;
+
+    // Count how many skills are downstream of each available skill
+    function countDownstream(skillId, visited = new Set()) {
+      if (visited.has(skillId)) return 0;
+      visited.add(skillId);
+      const children = skills.filter(s => s.prerequisites.includes(skillId));
+      let count = children.length;
+      children.forEach(c => { count += countDownstream(c.id, visited); });
+      return count;
+    }
+
+    let best = available[0];
+    let bestCount = countDownstream(best.id);
+    for (let i = 1; i < available.length; i++) {
+      const c = countDownstream(available[i].id);
+      if (c > bestCount) {
+        bestCount = c;
+        best = available[i];
+      }
+    }
+    return best.id;
   }
 
   // Feature 4: Draw background zones (once)
@@ -185,12 +213,12 @@
 
     const labelsGroup = document.getElementById('connections');
     const branches = [
-      { name: 'CLAUDE MASTERY', color: '#ffd700', x: 140, y: 315 },
-      { name: 'GIT & GITHUB', color: '#00ff88', x: 320, y: 110 },
-      { name: 'FOUNDATIONS', color: '#2dd4bf', x: 430, y: 315 },
-      { name: 'SHIP IT', color: '#3b82f6', x: 540, y: 315 },
-      { name: 'FEATURES', color: '#ff8800', x: 700, y: 315 },
-      { name: 'FIGMA TO CODE', color: '#a855f7', x: 860, y: 110 }
+      { name: 'CLAUDE MASTERY', color: '#ffd700', x: 170, y: 315 },
+      { name: 'GIT & GITHUB', color: '#00ff88', x: 370, y: 110 },
+      { name: 'FOUNDATIONS', color: '#2dd4bf', x: 630, y: 510 },
+      { name: 'SHIP IT', color: '#3b82f6', x: 630, y: 315 },
+      { name: 'FEATURES', color: '#ff8800', x: 780, y: 315 },
+      { name: 'FIGMA TO CODE', color: '#a855f7', x: 1000, y: 110 }
     ];
 
     branches.forEach(b => {
@@ -199,7 +227,7 @@
       text.setAttribute('y', b.y);
       text.classList.add('svg-branch-label');
       text.style.fill = b.color;
-      text.style.fontSize = '8px';
+      text.style.fontSize = '11px';
       text.style.fontFamily = "'SF Mono', 'Fira Code', monospace";
       text.style.fontWeight = '700';
       text.style.letterSpacing = '2px';
@@ -217,12 +245,12 @@
 
     const labelsGroup = document.getElementById('connections');
     const branchPositions = [
-      { branch: 'mastery', x: 140, y: 327 },
-      { branch: 'git', x: 320, y: 122 },
-      { branch: 'foundations', x: 430, y: 327 },
-      { branch: 'deploy', x: 540, y: 327 },
-      { branch: 'features', x: 700, y: 327 },
-      { branch: 'figma', x: 860, y: 122 }
+      { branch: 'mastery', x: 170, y: 327 },
+      { branch: 'git', x: 370, y: 122 },
+      { branch: 'foundations', x: 630, y: 522 },
+      { branch: 'deploy', x: 630, y: 327 },
+      { branch: 'features', x: 780, y: 327 },
+      { branch: 'figma', x: 1000, y: 122 }
     ];
 
     branchPositions.forEach(bp => {
@@ -330,10 +358,13 @@
     const nodesGroup = document.getElementById('nodes');
     nodesGroup.innerHTML = '';
 
+    const recommendedId = getRecommendedNext();
+
     skills.forEach((skill, index) => {
       const state = getNodeState(skill);
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.classList.add('node-group', `node-${state}`);
+      if (skill.id === recommendedId) g.classList.add('node-recommended');
       g.dataset.skillId = skill.id;
       g.setAttribute('transform', `translate(0,0)`);
 
@@ -404,7 +435,7 @@
         line1.textContent = words.slice(0, mid).join(' ');
         const line2 = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
         line2.setAttribute('x', skill.position.x);
-        line2.setAttribute('dy', '12');
+        line2.setAttribute('dy', '14');
         line2.textContent = words.slice(mid).join(' ');
         label.appendChild(line1);
         label.appendChild(line2);
@@ -414,8 +445,51 @@
 
       g.appendChild(label);
 
+      // Difficulty pip — small colored dot at top-right of node
+      if (skill.difficulty) {
+        const pip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const pipAngle = -Math.PI / 4; // top-right
+        pip.setAttribute('cx', skill.position.x + Math.cos(pipAngle) * (NODE_RADIUS + 1));
+        pip.setAttribute('cy', skill.position.y + Math.sin(pipAngle) * (NODE_RADIUS + 1));
+        pip.setAttribute('r', 3.5);
+        pip.classList.add('difficulty-pip', skill.difficulty);
+        g.appendChild(pip);
+      }
+
       // Click handler
       g.addEventListener('click', () => openDetail(skill));
+
+      // Hover tooltip handlers
+      g.addEventListener('mouseenter', (e) => {
+        const tooltip = document.getElementById('hoverTooltip');
+        document.getElementById('tooltipName').textContent = skill.name;
+        document.getElementById('tooltipDesc').textContent = skill.description;
+        const diffEl = document.getElementById('tooltipDifficulty');
+        diffEl.textContent = skill.difficulty ? skill.difficulty.toUpperCase() : '';
+        diffEl.className = 'tooltip-difficulty' + (skill.difficulty ? ` ${skill.difficulty}` : '');
+
+        const svg = document.getElementById('treeSvg');
+        const svgRect = svg.getBoundingClientRect();
+        const scaleX = svgRect.width / 1200;
+        const scaleY = svgRect.height / 850;
+        const screenX = svgRect.left + skill.position.x * scaleX;
+        const screenY = svgRect.top + skill.position.y * scaleY;
+
+        let left = screenX + NODE_RADIUS * scaleX + 12;
+        let top = screenY - 20;
+        if (left + 240 > window.innerWidth - 16) {
+          left = screenX - NODE_RADIUS * scaleX - 252;
+        }
+        top = Math.max(8, Math.min(top, window.innerHeight - 100));
+
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+        tooltip.classList.add('visible');
+      });
+
+      g.addEventListener('mouseleave', () => {
+        document.getElementById('hoverTooltip').classList.remove('visible');
+      });
 
       nodesGroup.appendChild(g);
     });
@@ -452,6 +526,7 @@
 
   // Detail panel — position next to clicked node
   function openDetail(skill, event) {
+    document.getElementById('hoverTooltip').classList.remove('visible');
     selectedSkill = skill;
     updateDetailPanel(skill);
 
@@ -459,7 +534,7 @@
     const svg = document.getElementById('treeSvg');
     const svgRect = svg.getBoundingClientRect();
 
-    const svgWidth = 1000;
+    const svgWidth = 1200;
     const svgHeight = 850;
     const scaleX = svgRect.width / svgWidth;
     const scaleY = svgRect.height / svgHeight;
@@ -488,11 +563,25 @@
     const descEl = document.getElementById('detailDesc');
     const statusEl = document.getElementById('detailStatus');
     const toggleEl = document.getElementById('detailToggle');
+    const tryItEl = document.getElementById('detailTryIt');
+    const diffEl = document.getElementById('detailDifficulty');
 
     branchEl.textContent = BRANCH_LABELS[skill.branch];
     branchEl.style.color = BRANCH_COLORS[skill.branch];
     nameEl.textContent = skill.name;
     descEl.textContent = skill.description;
+
+    // Difficulty badge
+    if (skill.difficulty) {
+      diffEl.textContent = skill.difficulty.toUpperCase();
+      diffEl.className = `detail-difficulty ${skill.difficulty}`;
+      diffEl.style.display = '';
+    } else {
+      diffEl.style.display = 'none';
+    }
+
+    // Try It prompt
+    tryItEl.textContent = skill.tryIt || '';
 
     statusEl.className = `detail-status ${state}`;
     if (state === 'completed') {
