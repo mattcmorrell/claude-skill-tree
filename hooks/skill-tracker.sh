@@ -4,8 +4,8 @@
 
 set -e
 
-PROGRESS_FILE="$HOME/claude-skill-tree/data/progress.json"
-SKILLS_FILE="$HOME/claude-skill-tree/data/skills.json"
+PROGRESS_FILE="$HOME/CascadeProjects/claude-skill-tree/data/progress.json"
+SKILLS_FILE="$HOME/CascadeProjects/claude-skill-tree/data/skills.json"
 
 # Read JSON from stdin
 INPUT=$(cat)
@@ -145,7 +145,7 @@ fi
 
 # --- Skill 9: Iterate with Screenshots ---
 if [ "$(is_completed "iterate-with-screenshots")" != "true" ]; then
-  if [ "$(is_completed "build-from-figma")" = "true" ] && [ "$(is_completed "use-screenshots")" = "true" ]; then
+  if [ "$(is_completed "build-from-figma")" = "true" ]; then
     if echo "$TOOL_NAME" | grep -qE '^mcp__playwright__browser_(take_screenshot|snapshot)$'; then
       unlock_skill "iterate-with-screenshots" "Iterate with Screenshots"
     fi

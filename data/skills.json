@@ -54,7 +54,7 @@
     "tryIt": "Try saying: 'Take a screenshot and tell me what looks off'",
     "prerequisites": ["run-dev-server"],
     "description": "Take a screenshot of your running app and share it with Claude. The most natural way to give feedback — just show it what needs fixing.",
-    "position": { "x": 500, "y": 370 },
+    "position": { "x": 480, "y": 370 },
     "detection": {
       "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
       "command_patterns": []
@@ -84,7 +84,7 @@
     "tryIt": "Try saying: 'Create a new branch called feature/redesign'",
     "prerequisites": ["setup-github"],
     "description": "Create a separate branch to work on without affecting the main code. Essential for safe experimentation — you can always throw it away.",
-    "position": { "x": 360, "y": 370 },
+    "position": { "x": 350, "y": 370 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["git\\s+checkout\\s+-b\\s+", "git\\s+switch\\s+-c\\s+", "git\\s+branch\\s+(?!-d|-D)\\w+"]
@@ -99,7 +99,7 @@
     "tryIt": "Try saying: 'Merge my branch into main and push it'",
     "prerequisites": ["use-branch"],
     "description": "Merge your branch back into main and push it. This is how your changes become official and available to the rest of the team.",
-    "position": { "x": 340, "y": 165 },
+    "position": { "x": 350, "y": 165 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["git\\s+push(\\s+(-u\\s+)?origin)?\\s+(main|master)", "gh\\s+pr\\s+merge"]
@@ -114,7 +114,7 @@
     "tryIt": "Try saying: 'Clone this repo and walk me through the codebase'",
     "prerequisites": ["setup-github"],
     "description": "Clone an existing repository and make it your own. Fork a template, explore the code, and start modifying — the fastest way to learn from real projects.",
-    "position": { "x": 170, "y": 165 },
+    "position": { "x": 200, "y": 165 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["git\\s+clone\\s+"]
@@ -129,7 +129,7 @@
     "tryIt": "Try saying: 'Clone the BHR frontend repo and get it running locally'",
     "prerequisites": ["setup-github"],
     "description": "Clone the BHR frontend repository from GitHub and set it up on your machine. Your starting point for working on the real product codebase.",
-    "position": { "x": 510, "y": 165 },
+    "position": { "x": 460, "y": 165 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["git\\s+clone.*bhr", "git\\s+clone.*BHR"]
@@ -144,7 +144,7 @@
     "tryIt": "Share a Figma link and say: 'Look at this design'",
     "prerequisites": ["create-project"],
     "description": "Link Figma directly to Claude Code so it can see your actual design files — not just descriptions of them. This is the bridge between design and code.",
-    "position": { "x": 930, "y": 570 },
+    "position": { "x": 840, "y": 570 },
     "detection": {
       "tool_name_pattern": "mcp__figma-desktop__.*",
       "command_patterns": []
@@ -159,7 +159,7 @@
     "tryIt": "Share a Figma link and say: 'Build this screen exactly as designed'",
     "prerequisites": ["connect-figma"],
     "description": "Give Claude a Figma link and have it generate the full UI in code. The closest thing to dragging a design straight into a codebase.",
-    "position": { "x": 1000, "y": 370 },
+    "position": { "x": 980, "y": 370 },
     "detection": {
       "tool_name": "mcp__figma-desktop__get_design_context",
       "command_patterns": []
@@ -172,13 +172,12 @@
     "color": "#a855f7",
     "difficulty": "adept",
     "tryIt": "Take a screenshot and say: 'Compare this to the Figma — what's different?'",
-    "prerequisites": ["build-from-figma", "use-screenshots"],
+    "prerequisites": ["build-from-figma"],
     "description": "Screenshot your build, compare it to the Figma design, and tell Claude what to fix. This is the design QA loop — refine until it's pixel-perfect.",
-    "position": { "x": 900, "y": 165 },
+    "position": { "x": 830, "y": 165 },
     "detection": {
       "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
-      "command_patterns": [],
-      "requires_skills": ["build-from-figma", "use-screenshots"]
+      "command_patterns": []
     }
   },
   {
@@ -190,7 +189,7 @@
     "tryIt": "Say: 'Now build the settings page from the same Figma file'",
     "prerequisites": ["build-from-figma"],
     "description": "Build more than one screen from your Figma file. Scale from a single page prototype to a full multi-screen app.",
-    "position": { "x": 1100, "y": 165 },
+    "position": { "x": 1080, "y": 165 },
     "detection": {
       "tool_name": "mcp__figma-desktop__get_design_context",
       "command_patterns": [],
@@ -207,7 +206,7 @@
     "tryIt": "Try saying: 'Build a chatbot that uses the Anthropic API with streaming responses'",
     "prerequisites": ["run-dev-server"],
     "description": "Build a project that uses an AI API key, like a chatbot. Learn how real AI-powered features connect under the hood.",
-    "position": { "x": 760, "y": 370 },
+    "position": { "x": 740, "y": 370 },
     "detection": {
       "tool_name_pattern": "Bash|Write|Edit",
       "command_patterns": ["npm\\s+install.*(openai|anthropic|@google\\/generative|@ai-sdk)", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"],
@@ -223,7 +222,7 @@
     "tryIt": "Try saying: 'Test my app by navigating to each page and checking for errors'",
     "prerequisites": ["run-dev-server"],
     "description": "Use browser automation to navigate your local site and verify it works. Automated QA without manual clicking through every page.",
-    "position": { "x": 880, "y": 370 },
+    "position": { "x": 860, "y": 370 },
     "detection": {
       "tool_name": "mcp__playwright__browser_navigate",
       "command_patterns": [],
@@ -239,7 +238,7 @@
     "tryIt": "Try saying: 'Generate 3 different layout options for a dashboard as separate HTML files'",
     "prerequisites": ["run-dev-server"],
     "description": "Ask Claude to generate multiple HTML mockup variations for a single idea. Rapidly explore different layouts, styles, and approaches before committing to one direction.",
-    "position": { "x": 680, "y": 165 },
+    "position": { "x": 600, "y": 165 },
     "detection": {
       "tool_name_pattern": "Write",
       "command_patterns": [],
@@ -255,7 +254,7 @@
     "tryIt": "Try saying: 'Deploy this project to Vercel so I can share the link'",
     "prerequisites": ["run-dev-server"],
     "description": "Ship your project to the internet so anyone can see it. Share a real, clickable URL with stakeholders — not just a screenshot.",
-    "position": { "x": 630, "y": 370 },
+    "position": { "x": 610, "y": 370 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["netlify\\s+deploy", "vercel(\\s|$)", "npm\\s+run\\s+deploy", "firebase\\s+deploy", "gh-pages", "surge\\s+", "fly\\s+deploy", "wrangler\\s+(deploy|publish)", "railway\\s+up"]
@@ -270,7 +269,7 @@
     "tryIt": "Try saying: 'Create a CLAUDE.md that tells Claude to use Tailwind and keep code simple'",
     "prerequisites": ["create-project"],
     "description": "Customize how Claude behaves in your project by editing its instructions file. Set your preferences, conventions, and constraints.",
-    "position": { "x": 200, "y": 570 },
+    "position": { "x": 180, "y": 570 },
     "detection": {
       "tool_name_pattern": "Write|Edit",
       "command_patterns": [],
@@ -302,7 +301,7 @@
     "tryIt": "Try saying: 'Create a /component slash command that generates a React component from a description'",
     "prerequisites": ["edit-claude-md"],
     "description": "Build a custom slash command that packages a complex workflow into a single action. Your own personalized Claude superpower.",
-    "position": { "x": 230, "y": 370 },
+    "position": { "x": 240, "y": 370 },
     "detection": {
       "tool_name_pattern": "Write",
       "command_patterns": [],

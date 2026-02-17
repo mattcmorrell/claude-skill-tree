@@ -53,11 +53,11 @@
   // Feature 4: Zone definitions for colored backgrounds
   const ZONE_DEFS = [
     { branch: 'mastery', cx: 180, cy: 470, rx: 120, ry: 150 },
-    { branch: 'git', cx: 370, cy: 370, rx: 160, ry: 250 },
-    { branch: 'foundations', cx: 630, cy: 620, rx: 130, ry: 200 },
-    { branch: 'deploy', cx: 630, cy: 370, rx: 50, ry: 50 },
-    { branch: 'features', cx: 780, cy: 300, rx: 120, ry: 140 },
-    { branch: 'figma', cx: 1000, cy: 370, rx: 140, ry: 250 }
+    { branch: 'git', cx: 350, cy: 370, rx: 160, ry: 250 },
+    { branch: 'foundations', cx: 600, cy: 620, rx: 130, ry: 200 },
+    { branch: 'deploy', cx: 610, cy: 370, rx: 50, ry: 50 },
+    { branch: 'features', cx: 730, cy: 300, rx: 120, ry: 140 },
+    { branch: 'figma', cx: 960, cy: 370, rx: 130, ry: 250 }
   ];
 
   let skills = [];
@@ -213,12 +213,12 @@
 
     const labelsGroup = document.getElementById('connections');
     const branches = [
-      { name: 'CLAUDE MASTERY', color: '#ffd700', x: 170, y: 315 },
-      { name: 'GIT & GITHUB', color: '#00ff88', x: 370, y: 110 },
-      { name: 'FOUNDATIONS', color: '#2dd4bf', x: 630, y: 510 },
-      { name: 'SHIP IT', color: '#3b82f6', x: 630, y: 315 },
-      { name: 'FEATURES', color: '#ff8800', x: 780, y: 315 },
-      { name: 'FIGMA TO CODE', color: '#a855f7', x: 1000, y: 110 }
+      { name: 'CLAUDE MASTERY', color: '#ffd700', x: 180, y: 315 },
+      { name: 'GIT & GITHUB', color: '#00ff88', x: 350, y: 110 },
+      { name: 'FOUNDATIONS', color: '#2dd4bf', x: 600, y: 510 },
+      { name: 'SHIP IT', color: '#3b82f6', x: 610, y: 315 },
+      { name: 'FEATURES', color: '#ff8800', x: 730, y: 315 },
+      { name: 'FIGMA TO CODE', color: '#a855f7', x: 960, y: 110 }
     ];
 
     branches.forEach(b => {
@@ -245,12 +245,12 @@
 
     const labelsGroup = document.getElementById('connections');
     const branchPositions = [
-      { branch: 'mastery', x: 170, y: 327 },
-      { branch: 'git', x: 370, y: 122 },
-      { branch: 'foundations', x: 630, y: 522 },
-      { branch: 'deploy', x: 630, y: 327 },
-      { branch: 'features', x: 780, y: 327 },
-      { branch: 'figma', x: 1000, y: 122 }
+      { branch: 'mastery', x: 180, y: 327 },
+      { branch: 'git', x: 350, y: 122 },
+      { branch: 'foundations', x: 600, y: 522 },
+      { branch: 'deploy', x: 610, y: 327 },
+      { branch: 'features', x: 730, y: 327 },
+      { branch: 'figma', x: 960, y: 122 }
     ];
 
     branchPositions.forEach(bp => {
@@ -546,10 +546,14 @@
     let left = screenX + NODE_RADIUS * scaleX + gap;
     let top = screenY - 40;
 
+    // Flip to left side if overflowing right
     if (left + panelWidth > window.innerWidth - 16) {
       left = screenX - NODE_RADIUS * scaleX - gap - panelWidth;
     }
-    top = Math.max(16, Math.min(top, window.innerHeight - 280));
+    // Clamp horizontal to stay on screen
+    left = Math.max(16, Math.min(left, window.innerWidth - panelWidth - 16));
+    // Clamp vertical — account for full panel height
+    top = Math.max(16, Math.min(top, window.innerHeight - 380));
 
     panel.style.left = left + 'px';
     panel.style.top = top + 'px';
