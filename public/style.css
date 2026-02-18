@@ -81,6 +81,41 @@ body::before {
   text-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 
+/* Rank badge */
+.rank-badge-container {
+  position: fixed;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 20;
+}
+
+.rank-svg {
+  line-height: 0;
+}
+
+.rank-svg svg {
+  filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.1));
+}
+
+.rank-name {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-weight: 700;
+}
+
+.rank-subtitle {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #444;
+  text-transform: uppercase;
+}
+
 /* Color legend */
 .legend {
   position: relative;
@@ -271,12 +306,9 @@ body::before {
   animation: card-unlock-burst 0.7s ease-out;
 }
 
-/* Detail panel — centered modal */
+/* Detail panel — card popover */
 .detail-panel {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
   width: 320px;
   background: rgba(12, 12, 24, 0.97);
   border: 1px solid rgba(255,255,255,0.15);
@@ -285,15 +317,17 @@ body::before {
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: scale(0.95);
+  transform-origin: top left;
+  transition: opacity 0.15s ease, transform 0.15s ease;
   backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 
 .detail-panel.open {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  transform: scale(1);
 }
 
 .detail-close {

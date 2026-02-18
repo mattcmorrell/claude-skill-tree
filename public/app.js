@@ -40,6 +40,255 @@
     'download-bhr': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2'
   };
 
+  const RANK_COLORS = ['#33334a', '#2dd4bf', '#3b82f6', '#a855f7', '#ff8800', '#ffd700', '#00d4ff'];
+
+  // Thresholds align with completing each level
+  function getCurrentRankIndex(completed) {
+    if (completed >= 20) return 6;
+    if (completed >= 18) return 5;
+    if (completed >= 13) return 4;
+    if (completed >= 7)  return 3;
+    if (completed >= 3)  return 2;
+    if (completed >= 1)  return 1;
+    return 0;
+  }
+
+  function buildBadgeSvg(rankIdx) {
+    const sz = 280;
+    const c = 140; // center
+    const vb = `0 0 ${sz} ${sz}`;
+
+    switch (rankIdx) {
+
+      // Level 1 — bare hexagon outline, dim, minimal. Just booted up.
+      case 0: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="${c},20 ${c+68},55 ${c+68},145 ${c},180 ${c-68},145 ${c-68},55"
+            fill="#0a0a14" stroke="#2a2a3a" stroke-width="1.5"/>
+          <polygon points="${c},50 ${c+46},72 ${c+46},128 ${c},150 ${c-46},128 ${c-46},72"
+            fill="none" stroke="#1e1e2e" stroke-width="1"/>
+          <line x1="${c-68}" y1="${c}" x2="${c+68}" y2="${c}" stroke="#1a1a28" stroke-width="0.75"/>
+          <line x1="${c}" y1="20" x2="${c}" y2="180" stroke="#1a1a28" stroke-width="0.75"/>
+          <text x="${c}" y="${c+6}" text-anchor="middle" font-family="'SF Mono','Fira Code',monospace" font-size="32" font-weight="700" fill="#2a2a3a">1</text>
+        </svg>`;
+
+      // Level 2 — hexagon with scanlines, a center pip, teal glow starting
+      case 1: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf1" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feFlood flood-color="#2dd4bf" flood-opacity="0.4"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <polygon points="${c},20 ${c+68},55 ${c+68},145 ${c},180 ${c-68},145 ${c-68},55"
+            fill="#060f0e" stroke="#2dd4bf" stroke-width="1.5" filter="url(#gf1)"/>
+          <line x1="72" y1="80" x2="208" y2="80" stroke="#2dd4bf" stroke-width="1" opacity="0.2"/>
+          <line x1="72" y1="100" x2="208" y2="100" stroke="#2dd4bf" stroke-width="0.75" opacity="0.15"/>
+          <line x1="72" y1="120" x2="208" y2="120" stroke="#2dd4bf" stroke-width="1" opacity="0.2"/>
+          <line x1="72" y1="140" x2="208" y2="140" stroke="#2dd4bf" stroke-width="0.75" opacity="0.1"/>
+          <line x1="72" y1="160" x2="208" y2="160" stroke="#2dd4bf" stroke-width="0.75" opacity="0.1"/>
+          <circle cx="${c}" cy="${c}" r="8" fill="#2dd4bf" opacity="0.6" filter="url(#gf1)"/>
+          <circle cx="${c}" cy="${c}" r="3" fill="#ffffff" opacity="0.7"/>
+          <text x="${c}" y="210" text-anchor="middle" font-family="'SF Mono','Fira Code',monospace" font-size="14" fill="#2dd4bf" opacity="0.5" letter-spacing="6">SYS.ONLINE</text>
+        </svg>`;
+
+      // Level 3 — hexagon + inner hex + data lines radiating, blue
+      case 2: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf2" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feFlood flood-color="#3b82f6" flood-opacity="0.5"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <polygon points="${c},16 ${c+72},54 ${c+72},148 ${c},186 ${c-72},148 ${c-72},54"
+            fill="#06091a" stroke="#3b82f6" stroke-width="1.5" filter="url(#gf2)"/>
+          <polygon points="${c},50 ${c+46},72 ${c+46},128 ${c},150 ${c-46},128 ${c-46},72"
+            fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+          <line x1="${c}" y1="16" x2="${c}" y2="50" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
+          <line x1="${c}" y1="150" x2="${c}" y2="186" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
+          <line x1="${c-72}" y1="100" x2="${c-46}" y2="100" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
+          <line x1="${c+46}" y1="100" x2="${c+72}" y2="100" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
+          <circle cx="${c}" cy="${c}" r="20" fill="none" stroke="#3b82f6" stroke-width="1.5" opacity="0.6" filter="url(#gf2)"/>
+          <circle cx="${c}" cy="${c}" r="6" fill="#3b82f6" opacity="0.7" filter="url(#gf2)"/>
+          <text x="${c}" y="${c+5}" text-anchor="middle" font-family="'SF Mono','Fira Code',monospace" font-size="28" font-weight="700" fill="#3b82f6" filter="url(#gf2)">3</text>
+        </svg>`;
+
+      // Level 4 — hexagon + wing brackets + inner rotating ring, purple
+      case 3: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf3" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feFlood flood-color="#a855f7" flood-opacity="0.5"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <polyline points="46,54 28,70 28,130 46,146" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5" filter="url(#gf3)"/>
+          <polyline points="234,54 252,70 252,130 234,146" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5" filter="url(#gf3)"/>
+          <polygon points="${c},16 ${c+72},54 ${c+72},148 ${c},186 ${c-72},148 ${c-72},54"
+            fill="#0c0618" stroke="#a855f7" stroke-width="1.5" filter="url(#gf3)"/>
+          <polygon points="${c},50 ${c+46},72 ${c+46},128 ${c},150 ${c-46},128 ${c-46},72"
+            fill="none" stroke="#a855f7" stroke-width="1" opacity="0.25"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="360 ${c} ${c}" dur="20s" repeatCount="indefinite"/>
+            <circle cx="${c}" cy="${c}" r="36" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.4" stroke-dasharray="8 12"/>
+          </g>
+          <circle cx="${c}" cy="${c}" r="14" fill="#a855f7" opacity="0.15"/>
+          <circle cx="${c}" cy="${c}" r="14" fill="none" stroke="#a855f7" stroke-width="1.5" filter="url(#gf3)"/>
+          <text x="${c}" y="${c+8}" text-anchor="middle" font-family="'SF Mono','Fira Code',monospace" font-size="22" font-weight="700" fill="#e0aaff" filter="url(#gf3)">4</text>
+        </svg>`;
+
+      // Level 5 — hex + data orbits + glowing core + pips, orange/gold
+      case 4: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf4" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feFlood flood-color="#ff8800" flood-opacity="0.6"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <polyline points="36,48 14,68 14,132 36,152" fill="none" stroke="#ff8800" stroke-width="2" opacity="0.4" filter="url(#gf4)"/>
+          <polyline points="244,48 266,68 266,132 244,152" fill="none" stroke="#ff8800" stroke-width="2" opacity="0.4" filter="url(#gf4)"/>
+          <line x1="14" y1="100" x2="0" y2="100" stroke="#ff8800" stroke-width="2" opacity="0.3"/>
+          <line x1="266" y1="100" x2="280" y2="100" stroke="#ff8800" stroke-width="2" opacity="0.3"/>
+          <polygon points="${c},12 ${c+76},52 ${c+76},148 ${c},188 ${c-76},148 ${c-76},52"
+            fill="#0f0800" stroke="#ff8800" stroke-width="1.5" filter="url(#gf4)"/>
+          <polygon points="${c},44 ${c+50},68 ${c+50},132 ${c},156 ${c-50},132 ${c-50},68"
+            fill="none" stroke="#ff8800" stroke-width="1" opacity="0.2"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="-360 ${c} ${c}" dur="16s" repeatCount="indefinite"/>
+            <circle cx="${c}" cy="${c}" r="42" fill="none" stroke="#ff8800" stroke-width="0.75" opacity="0.35" stroke-dasharray="4 8"/>
+            <circle cx="${c+42}" cy="${c}" r="3" fill="#ff8800" opacity="0.8"/>
+            <circle cx="${c-42}" cy="${c}" r="3" fill="#ff8800" opacity="0.8"/>
+          </g>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="360 ${c} ${c}" dur="10s" repeatCount="indefinite"/>
+            <circle cx="${c}" cy="${c}" r="28" fill="none" stroke="#ffa500" stroke-width="0.75" opacity="0.3" stroke-dasharray="6 10"/>
+            <circle cx="${c}" cy="${c-28}" r="2.5" fill="#ffa500" opacity="0.9"/>
+          </g>
+          <circle cx="${c}" cy="${c}" r="12" fill="#ff8800" opacity="0.2"/>
+          <circle cx="${c}" cy="${c}" r="12" fill="none" stroke="#ff8800" stroke-width="2" filter="url(#gf4)"/>
+          <text x="${c}" y="${c+7}" text-anchor="middle" font-family="'SF Mono','Fira Code',monospace" font-size="20" font-weight="700" fill="#ffffff" filter="url(#gf4)">5</text>
+        </svg>`;
+
+      // Level 6 — hex + sunburst rays + golden star + pulsing ring, gold
+      case 5: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf5" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="7" result="b"/>
+              <feFlood flood-color="#ffd700" flood-opacity="0.6"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <line x1="${c}" y1="0"   x2="${c}" y2="30"  stroke="#ffd700" stroke-width="2.5" stroke-linecap="round" filter="url(#gf5)"/>
+          <line x1="${c}" y1="170" x2="${c}" y2="200"  stroke="#ffd700" stroke-width="2.5" stroke-linecap="round" filter="url(#gf5)"/>
+          <line x1="270" y1="${c}" x2="240" y2="${c}"  stroke="#ffd700" stroke-width="2.5" stroke-linecap="round" filter="url(#gf5)"/>
+          <line x1="10"  y1="${c}" x2="40"  y2="${c}"  stroke="#ffd700" stroke-width="2.5" stroke-linecap="round" filter="url(#gf5)"/>
+          <line x1="232" y1="38"  x2="212" y2="58"  stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+          <line x1="232" y1="162" x2="212" y2="142" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+          <line x1="48"  y1="162" x2="68"  y2="142" stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+          <line x1="48"  y1="38"  x2="68"  y2="58"  stroke="#ffd700" stroke-width="1.5" opacity="0.5"/>
+          <polygon points="${c},12 ${c+76},52 ${c+76},148 ${c},188 ${c-76},148 ${c-76},52"
+            fill="#100a00" stroke="#ffd700" stroke-width="2" filter="url(#gf5)"/>
+          <polygon points="${c},44 ${c+50},68 ${c+50},132 ${c},156 ${c-50},132 ${c-50},68"
+            fill="none" stroke="#ffd700" stroke-width="1" opacity="0.25"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="360 ${c} ${c}" dur="30s" repeatCount="indefinite"/>
+            <circle cx="${c}" cy="${c}" r="50" fill="none" stroke="#ffd700" stroke-width="0.75" opacity="0.3" stroke-dasharray="3 9"/>
+          </g>
+          <polygon points="${c},98 ${c+4},${c-4} ${c+18},${c-4} ${c+7},${c+4} ${c+11},${c+18} ${c},${c+10} ${c-11},${c+18} ${c-7},${c+4} ${c-18},${c-4} ${c-4},${c-4}"
+            fill="#ffd700" opacity="0.85" filter="url(#gf5)"/>
+          <circle cx="${c}" cy="${c}" r="46" fill="none" stroke="#ffd700" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0.4;0" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="46;56;46" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+        </svg>`;
+
+      // MAX LEVEL — all complete — full sci-fi terminal: hex + skull-circuit + rotating spike ring + pulsing aura, electric cyan
+      case 6: return `
+        <svg viewBox="${vb}" width="${sz}" height="${sz}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="gf6" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feFlood flood-color="#00d4ff" flood-opacity="0.7"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="gf6w" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feFlood flood-color="#ffffff" flood-opacity="1"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#gf6)">
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="360 ${c} ${c}" dur="14s" repeatCount="indefinite"/>
+            <polygon points="${c},4 ${c+6},22 ${c-6},22"     fill="#00d4ff" opacity="0.9"/>
+            <polygon points="${c+60},18 ${c+64},36 ${c+52},32"  fill="#00d4ff" opacity="0.6"/>
+            <polygon points="${c+76},${c} ${c+62},${c+6} ${c+62},${c-6}" fill="#00d4ff" opacity="0.8"/>
+            <polygon points="${c+60},182 ${c+52},168 ${c+64},164" fill="#00d4ff" opacity="0.6"/>
+            <polygon points="${c},196 ${c-6},178 ${c+6},178"     fill="#00d4ff" opacity="0.9"/>
+            <polygon points="${c-60},182 ${c-64},164 ${c-52},168" fill="#00d4ff" opacity="0.6"/>
+            <polygon points="${c-76},${c} ${c-62},${c-6} ${c-62},${c+6}" fill="#00d4ff" opacity="0.8"/>
+            <polygon points="${c-60},18 ${c-52},32 ${c-64},36"  fill="#00d4ff" opacity="0.6"/>
+          </g>
+          <polygon points="${c},12 ${c+76},52 ${c+76},148 ${c},188 ${c-76},148 ${c-76},52"
+            fill="#020810" stroke="#00d4ff" stroke-width="2" filter="url(#gf6)"/>
+          <polygon points="${c},40 ${c+52},66 ${c+52},134 ${c},160 ${c-52},134 ${c-52},66"
+            fill="none" stroke="#00d4ff" stroke-width="0.75" opacity="0.2"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 ${c} ${c}" to="-360 ${c} ${c}" dur="20s" repeatCount="indefinite"/>
+            <circle cx="${c}" cy="${c}" r="56" fill="none" stroke="#00d4ff" stroke-width="0.75" opacity="0.25" stroke-dasharray="5 10"/>
+          </g>
+          <ellipse cx="${c-22}" cy="${c-12}" rx="16" ry="14" fill="#020810"/>
+          <ellipse cx="${c-22}" cy="${c-12}" rx="16" ry="14" fill="none" stroke="#00d4ff" stroke-width="1.5" filter="url(#gf6)"/>
+          <ellipse cx="${c-22}" cy="${c-12}" rx="6" ry="6" fill="#00d4ff" opacity="0.5" filter="url(#gf6w)"/>
+          <circle cx="${c-22}" cy="${c-12}" r="3" fill="#fff" filter="url(#gf6w)"/>
+          <ellipse cx="${c+22}" cy="${c-12}" rx="16" ry="14" fill="#020810"/>
+          <ellipse cx="${c+22}" cy="${c-12}" rx="16" ry="14" fill="none" stroke="#00d4ff" stroke-width="1.5" filter="url(#gf6)"/>
+          <ellipse cx="${c+22}" cy="${c-12}" rx="6" ry="6" fill="#00d4ff" opacity="0.5" filter="url(#gf6w)"/>
+          <circle cx="${c+22}" cy="${c-12}" r="3" fill="#fff" filter="url(#gf6w)"/>
+          <polygon points="${c},${c+6} ${c-6},${c+20} ${c+6},${c+20}" fill="#020810" stroke="#00d4ff" stroke-width="1" opacity="0.7"/>
+          <line x1="${c-30}" y1="${c+32}" x2="${c+30}" y2="${c+32}" stroke="#00d4ff" stroke-width="1" opacity="0.3"/>
+          <line x1="${c-20}" y1="${c+32}" x2="${c-20}" y2="${c+42}" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" opacity="0.7" filter="url(#gf6)"/>
+          <line x1="${c-10}" y1="${c+32}" x2="${c-10}" y2="${c+46}" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" opacity="0.85" filter="url(#gf6)"/>
+          <line x1="${c}" y1="${c+32}" x2="${c}" y2="${c+48}" stroke="#00d4ff" stroke-width="3" stroke-linecap="round" filter="url(#gf6)"/>
+          <line x1="${c+10}" y1="${c+32}" x2="${c+10}" y2="${c+46}" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" opacity="0.85" filter="url(#gf6)"/>
+          <line x1="${c+20}" y1="${c+32}" x2="${c+20}" y2="${c+42}" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round" opacity="0.7" filter="url(#gf6)"/>
+          <circle cx="${c}" cy="${c}" r="68" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0">
+            <animate attributeName="opacity" values="0;0.3;0" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="r" values="68;80;68" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>`;
+
+      default: return '';
+    }
+  }
+
+  function renderRankBadge() {
+    const container = document.getElementById('rankBadge');
+    if (!container) return;
+    const completed = progress.totalCompleted || 0;
+    const rankIdx = getCurrentRankIndex(completed);
+    const levelNum = rankIdx === 0 ? 1 : rankIdx + 1;
+    const label = rankIdx === 6 ? 'MAX LEVEL' : `Level ${levelNum}`;
+    container.innerHTML = `
+      <div class="rank-svg">${buildBadgeSvg(rankIdx)}</div>
+      <div class="rank-name" style="color:${RANK_COLORS[rankIdx]}">${label}</div>
+    `;
+  }
+
   let skills = [];
   let progress = { skills: {}, totalCompleted: 0 };
   let previousCompleted = new Set();
@@ -223,6 +472,7 @@
   // Full render — build level rows with cards
   function render() {
     renderLegend();
+    renderRankBadge();
     const container = document.getElementById('levelsContainer');
     container.innerHTML = '';
 
@@ -260,11 +510,37 @@
     }
   }
 
-  // Open detail panel — centered modal
+  // Open detail panel — positioned to the right of the clicked card
   function openDetail(skill) {
     selectedSkill = skill;
     updateDetailPanel(skill);
-    document.getElementById('detailPanel').classList.add('open');
+
+    const panel = document.getElementById('detailPanel');
+    const card = document.querySelector(`[data-skill-id="${skill.id}"]`);
+    const panelWidth = 320;
+    const gap = 12;
+
+    if (card) {
+      const rect = card.getBoundingClientRect();
+      let left = rect.right + gap;
+      let top = rect.top;
+
+      // Flip to left if overflowing right edge
+      if (left + panelWidth > window.innerWidth - 16) {
+        left = rect.left - panelWidth - gap;
+      }
+      // Clamp left to stay on screen
+      left = Math.max(16, left);
+      // Clamp top so panel doesn't overflow bottom
+      const panelHeight = 420;
+      top = Math.min(top, window.innerHeight - panelHeight - 16);
+      top = Math.max(16, top);
+
+      panel.style.top = top + 'px';
+      panel.style.left = left + 'px';
+    }
+
+    panel.classList.add('open');
   }
 
   function updateDetailPanel(skill) {
@@ -313,6 +589,7 @@
     panel.classList.remove('open');
     selectedSkill = null;
   });
+
 
   async function toggleSkill(skillId) {
     const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
