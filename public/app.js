@@ -42,13 +42,13 @@
 
   const RANK_COLORS = ['#33334a', '#2dd4bf', '#3b82f6', '#a855f7', '#ff8800', '#ffd700', '#00d4ff'];
 
-  // Thresholds align with completing each level
+  // Thresholds align with completing each level (21 skills, levels 0-6)
   function getCurrentRankIndex(completed) {
-    if (completed >= 20) return 6;
-    if (completed >= 18) return 5;
-    if (completed >= 13) return 4;
-    if (completed >= 7)  return 3;
-    if (completed >= 3)  return 2;
+    if (completed >= 21) return 6;
+    if (completed >= 17) return 5;
+    if (completed >= 11) return 4;
+    if (completed >= 5)  return 3;
+    if (completed >= 2)  return 2;
     if (completed >= 1)  return 1;
     return 0;
   }
@@ -281,8 +281,7 @@
     if (!container) return;
     const completed = progress.totalCompleted || 0;
     const rankIdx = getCurrentRankIndex(completed);
-    const levelNum = rankIdx === 0 ? 1 : rankIdx + 1;
-    const label = rankIdx === 6 ? 'MAX LEVEL' : `Level ${levelNum}`;
+    const label = rankIdx === 6 ? 'MAX LEVEL' : `Level ${rankIdx}`;
     container.innerHTML = `
       <div class="rank-svg">${buildBadgeSvg(rankIdx)}</div>
       <div class="rank-name" style="color:${RANK_COLORS[rankIdx]}">${label}</div>
@@ -307,7 +306,7 @@
   // Locked if the previous level isn't fully completed
   function getNodeState(skill) {
     if (progress.skills[skill.id]?.completed) return 'completed';
-    const skillLevel = skill.level || 1;
+    const skillLevel = skill.level ?? 1;
     if (skillLevel === 1) return 'available';
     const prevLevelSkills = skills.filter(s => s.level === skillLevel - 1);
     const prevLevelDone = prevLevelSkills.every(s => progress.skills[s.id]?.completed);
@@ -318,7 +317,7 @@
   function groupByLevel(skillsArr) {
     const map = {};
     skillsArr.forEach(skill => {
-      const lvl = skill.level || 1;
+      const lvl = skill.level ?? 1;
       if (!map[lvl]) map[lvl] = [];
       map[lvl].push(skill);
     });
@@ -568,7 +567,7 @@
     } else if (state === 'available') {
       statusEl.textContent = 'Available';
     } else {
-      statusEl.textContent = `Locked — complete Level ${(skill.level || 1) - 1} first`;
+      statusEl.textContent = `Locked — complete Level ${(skill.level ?? 1) - 1} first`;
     }
 
     toggleEl.textContent = state === 'completed' ? 'Unmark' : 'Mark Complete';
