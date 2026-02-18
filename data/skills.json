@@ -1,7 +1,7 @@
 [
   {
-    "id": "download-claude-code",
-    "name": "Download Claude Code",
+    "id": "install-claude-code",
+    "name": "Install Claude Code",
     "branch": "foundations",
     "color": "#2dd4bf",
     "difficulty": "beginner",
@@ -9,7 +9,6 @@
     "tryIt": "Run: npm install -g @anthropic-ai/claude-code",
     "prerequisites": [],
     "description": "Install Claude Code on your machine. This is where it all begins — one command and you're ready to start building with AI.",
-    "position": { "x": 600, "y": 870 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["npm\\s+install.*claude-code", "brew\\s+install.*claude"]
@@ -25,7 +24,6 @@
     "tryIt": "Try saying: 'Create a new project with Vite and React'",
     "prerequisites": [],
     "description": "Set up a fresh project directory. This is your blank canvas — every design-to-code journey starts here.",
-    "position": { "x": 600, "y": 770 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["mkdir\\s+", "npx\\s+create-", "npm\\s+init", "yarn\\s+create", "pnpm\\s+create"]
@@ -39,9 +37,8 @@
     "difficulty": "beginner",
     "level": 2,
     "tryIt": "Try saying: 'Build a landing page with a hero section, feature cards, and a signup form'",
-    "prerequisites": ["create-project"],
+    "prerequisites": [],
     "description": "Tell Claude what you want in plain language and watch it write the code. This is the core skill — describe your vision, get working software.",
-    "position": { "x": 600, "y": 670 },
     "detection": {
       "tool_name_pattern": "Write",
       "command_patterns": [],
@@ -56,29 +53,41 @@
     "difficulty": "beginner",
     "level": 2,
     "tryIt": "Try saying: 'Start the dev server so I can see my app in the browser'",
-    "prerequisites": ["describe-and-build"],
+    "prerequisites": [],
     "description": "Start a local server so you can preview your work in a browser in real-time. See changes instantly as Claude builds your UI.",
-    "position": { "x": 600, "y": 570 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["npm\\s+(run\\s+)?(dev|start|serve)", "npx\\s+(vite|next|serve|live-server|http-server)", "python.*http\\.server", "yarn\\s+(dev|start)"]
     }
   },
   {
-    "id": "edit-claude-md",
-    "name": "Edit CLAUDE.md",
+    "id": "use-screenshots",
+    "name": "Use Screenshots for Feedback",
+    "branch": "foundations",
+    "color": "#2dd4bf",
+    "difficulty": "beginner",
+    "level": 2,
+    "tryIt": "Try saying: 'Take a screenshot and tell me what looks off'",
+    "prerequisites": [],
+    "description": "Take a screenshot of your running app and share it with Claude. The most natural way to give feedback — just show it what needs fixing.",
+    "detection": {
+      "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
+      "command_patterns": []
+    }
+  },
+  {
+    "id": "change-claude-model",
+    "name": "Change Your Claude Model",
     "branch": "mastery",
     "color": "#ffd700",
     "difficulty": "beginner",
     "level": 2,
-    "tryIt": "Try saying: 'Create a CLAUDE.md that tells Claude to use Tailwind and keep code simple'",
-    "prerequisites": ["create-project"],
-    "description": "Customize how Claude behaves in your project by editing its instructions file. Set your preferences, conventions, and constraints.",
-    "position": { "x": 180, "y": 570 },
+    "tryIt": "Press Shift+Tab in Claude Code to toggle between models, or try /model",
+    "prerequisites": [],
+    "description": "Switch between Claude models like Sonnet and Opus to balance speed and capability. Use a fast model for quick edits and a powerful one when you need deep reasoning or complex builds.",
     "detection": {
-      "tool_name_pattern": "Write|Edit",
-      "command_patterns": [],
-      "file_pattern": "CLAUDE\\.md$"
+      "tool_name_pattern": "",
+      "command_patterns": []
     }
   },
   {
@@ -87,30 +96,58 @@
     "branch": "git",
     "color": "#00ff88",
     "difficulty": "beginner",
-    "level": 2,
+    "level": 3,
     "tryIt": "Try saying: 'Set up a GitHub repo for this project and push the code'",
-    "prerequisites": ["create-project"],
+    "prerequisites": [],
     "description": "Connect your project to GitHub for version control. This protects your work and lets you collaborate with engineers on their terms.",
-    "position": { "x": 380, "y": 570 },
     "detection": {
       "tool_name": "Bash",
       "command_patterns": ["git\\s+remote\\s+add", "gh\\s+repo\\s+create", "git\\s+clone\\s+", "git\\s+init"]
     }
   },
   {
-    "id": "use-screenshots",
-    "name": "Use Screenshots",
-    "branch": "foundations",
-    "color": "#2dd4bf",
+    "id": "clone-bhr-template",
+    "name": "Clone a Branch — BHR Template",
+    "branch": "git",
+    "color": "#00ff88",
     "difficulty": "beginner",
     "level": 3,
-    "tryIt": "Try saying: 'Take a screenshot and tell me what looks off'",
-    "prerequisites": ["run-dev-server"],
-    "description": "Take a screenshot of your running app and share it with Claude. The most natural way to give feedback — just show it what needs fixing.",
-    "position": { "x": 480, "y": 370 },
+    "tryIt": "Try saying: 'Clone the BHR frontend repo and get it running locally'",
+    "prerequisites": [],
+    "description": "Clone the BHR frontend repository from GitHub and set it up on your machine. Your starting point for working on the real product codebase.",
     "detection": {
-      "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
-      "command_patterns": []
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+clone.*bhr", "git\\s+clone.*BHR", "git\\s+clone\\s+"]
+    }
+  },
+  {
+    "id": "create-branch",
+    "name": "Create a Branch",
+    "branch": "git",
+    "color": "#00ff88",
+    "difficulty": "beginner",
+    "level": 3,
+    "tryIt": "Try saying: 'Create a new branch called feature/redesign'",
+    "prerequisites": [],
+    "description": "Create a separate branch to work on without affecting the main code. Essential for safe experimentation — you can always throw it away.",
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+checkout\\s+-b\\s+", "git\\s+switch\\s+-c\\s+", "git\\s+branch\\s+(?!-d|-D)\\w+"]
+    }
+  },
+  {
+    "id": "commit-and-push",
+    "name": "Commit and Push",
+    "branch": "git",
+    "color": "#00ff88",
+    "difficulty": "beginner",
+    "level": 3,
+    "tryIt": "Try saying: 'Commit my changes and push to GitHub'",
+    "prerequisites": [],
+    "description": "Save your work with a git commit and push it to GitHub. This is how you preserve your progress and share changes with your team.",
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["git\\s+commit", "git\\s+push"]
     }
   },
   {
@@ -119,125 +156,55 @@
     "branch": "figma",
     "color": "#a855f7",
     "difficulty": "adept",
-    "level": 3,
+    "level": 4,
     "tryIt": "Share a Figma link and say: 'Look at this design'",
-    "prerequisites": ["create-project"],
+    "prerequisites": [],
     "description": "Link Figma directly to Claude Code so it can see your actual design files — not just descriptions of them. This is the bridge between design and code.",
-    "position": { "x": 840, "y": 570 },
     "detection": {
       "tool_name_pattern": "mcp__figma-desktop__.*",
       "command_patterns": []
     }
   },
   {
-    "id": "generate-mockups",
-    "name": "Generate Mockups",
-    "branch": "features",
-    "color": "#ff8800",
-    "difficulty": "beginner",
-    "level": 3,
-    "tryIt": "Try saying: 'Generate 3 different layout options for a dashboard as separate HTML files'",
-    "prerequisites": ["run-dev-server"],
-    "description": "Ask Claude to generate multiple HTML mockup variations for a single idea. Rapidly explore different layouts, styles, and approaches before committing to one direction.",
-    "position": { "x": 600, "y": 165 },
+    "id": "add-to-existing-screen",
+    "name": "Add to an Existing Screen",
+    "branch": "figma",
+    "color": "#a855f7",
+    "difficulty": "adept",
+    "level": 4,
+    "tryIt": "Share a Figma component and say: 'Add this sidebar to the existing dashboard page'",
+    "prerequisites": [],
+    "description": "Use a Figma design to add a new component or section to a page that already exists in code. The most common real-world design handoff — incremental changes, not greenfield builds.",
     "detection": {
-      "tool_name_pattern": "Write",
-      "command_patterns": [],
-      "file_patterns": ["mockup.*\\.html$", "variant.*\\.html$", "option.*\\.html$"]
+      "tool_name_pattern": "mcp__figma-desktop__get_design_context",
+      "command_patterns": []
     }
   },
   {
-    "id": "create-intent-md",
-    "name": "Create INTENT.md",
-    "branch": "mastery",
-    "color": "#ffd700",
-    "difficulty": "beginner",
-    "level": 3,
-    "tryIt": "Try saying: 'Create an INTENT.md that captures what we're building and why'",
-    "prerequisites": ["edit-claude-md"],
-    "description": "Create a file that preserves your project context across Claude sessions. It picks up where you left off — even after closing the terminal.",
-    "position": { "x": 100, "y": 370 },
-    "detection": {
-      "tool_name_pattern": "Write|Edit",
-      "command_patterns": [],
-      "file_pattern": "INTENT\\.md$"
-    }
-  },
-  {
-    "id": "clone-and-modify",
-    "name": "Clone and Modify",
-    "branch": "git",
-    "color": "#00ff88",
-    "difficulty": "beginner",
-    "level": 3,
-    "tryIt": "Try saying: 'Clone this repo and walk me through the codebase'",
-    "prerequisites": ["setup-github"],
-    "description": "Clone an existing repository and make it your own. Fork a template, explore the code, and start modifying — the fastest way to learn from real projects.",
-    "position": { "x": 200, "y": 165 },
-    "detection": {
-      "tool_name": "Bash",
-      "command_patterns": ["git\\s+clone\\s+"]
-    }
-  },
-  {
-    "id": "download-bhr",
-    "name": "Download BHR Frontend",
-    "branch": "git",
-    "color": "#00ff88",
-    "difficulty": "beginner",
-    "level": 3,
-    "tryIt": "Try saying: 'Clone the BHR frontend repo and get it running locally'",
-    "prerequisites": ["setup-github"],
-    "description": "Clone the BHR frontend repository from GitHub and set it up on your machine. Your starting point for working on the real product codebase.",
-    "position": { "x": 460, "y": 165 },
-    "detection": {
-      "tool_name": "Bash",
-      "command_patterns": ["git\\s+clone.*bhr", "git\\s+clone.*BHR"]
-    }
-  },
-  {
-    "id": "build-from-figma",
-    "name": "Build from Figma",
+    "id": "build-new-page-from-figma",
+    "name": "Build a New Page from Figma",
     "branch": "figma",
     "color": "#a855f7",
     "difficulty": "adept",
     "level": 4,
     "tryIt": "Share a Figma link and say: 'Build this screen exactly as designed'",
-    "prerequisites": ["connect-figma"],
-    "description": "Give Claude a Figma link and have it generate the full UI in code. The closest thing to dragging a design straight into a codebase.",
-    "position": { "x": 980, "y": 370 },
+    "prerequisites": [],
+    "description": "Give Claude a Figma link and have it generate a complete new page from scratch. Go from a design file to working code in minutes.",
     "detection": {
       "tool_name": "mcp__figma-desktop__get_design_context",
       "command_patterns": []
     }
   },
   {
-    "id": "use-branch",
-    "name": "Use a Branch",
-    "branch": "git",
-    "color": "#00ff88",
-    "difficulty": "adept",
-    "level": 4,
-    "tryIt": "Try saying: 'Create a new branch called feature/redesign'",
-    "prerequisites": ["setup-github"],
-    "description": "Create a separate branch to work on without affecting the main code. Essential for safe experimentation — you can always throw it away.",
-    "position": { "x": 350, "y": 370 },
-    "detection": {
-      "tool_name": "Bash",
-      "command_patterns": ["git\\s+checkout\\s+-b\\s+", "git\\s+switch\\s+-c\\s+", "git\\s+branch\\s+(?!-d|-D)\\w+"]
-    }
-  },
-  {
     "id": "use-playwright",
-    "name": "Use Playwright",
+    "name": "Use Playwright MCP",
     "branch": "features",
     "color": "#ff8800",
     "difficulty": "adept",
     "level": 4,
-    "tryIt": "Try saying: 'Test my app by navigating to each page and checking for errors'",
-    "prerequisites": ["run-dev-server"],
-    "description": "Use browser automation to navigate your local site and verify it works. Automated QA without manual clicking through every page.",
-    "position": { "x": 860, "y": 370 },
+    "tryIt": "Try saying: 'Take a screenshot of my app and compare it to the Figma design'",
+    "prerequisites": [],
+    "description": "Use browser automation to navigate your running app, take screenshots, and compare them to your Figma designs. The design QA loop — refine until it's pixel-perfect.",
     "detection": {
       "tool_name": "mcp__playwright__browser_navigate",
       "command_patterns": [],
@@ -245,51 +212,34 @@
     }
   },
   {
-    "id": "iterate-with-screenshots",
-    "name": "Iterate with Screenshots",
-    "branch": "figma",
-    "color": "#a855f7",
+    "id": "edit-claude-md",
+    "name": "Edit CLAUDE.md",
+    "branch": "mastery",
+    "color": "#ffd700",
     "difficulty": "adept",
-    "level": 4,
-    "tryIt": "Take a screenshot and say: 'Compare this to the Figma — what's different?'",
-    "prerequisites": ["build-from-figma"],
-    "description": "Screenshot your build, compare it to the Figma design, and tell Claude what to fix. This is the design QA loop — refine until it's pixel-perfect.",
-    "position": { "x": 830, "y": 165 },
+    "level": 5,
+    "tryIt": "Try saying: 'Create a CLAUDE.md that tells Claude to use Tailwind and keep code simple'",
+    "prerequisites": [],
+    "description": "Customize how Claude behaves in your project by editing its instructions file. Set your preferences, conventions, and constraints so Claude codes the way you want.",
     "detection": {
-      "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
+      "tool_name_pattern": "Write|Edit",
+      "command_patterns": [],
+      "file_pattern": "CLAUDE\\.md$"
+    }
+  },
+  {
+    "id": "use-plan-mode",
+    "name": "Use Claude's Plan Mode",
+    "branch": "mastery",
+    "color": "#ffd700",
+    "difficulty": "adept",
+    "level": 5,
+    "tryIt": "Try saying: 'Plan how you'd implement a settings page before building it'",
+    "prerequisites": [],
+    "description": "Ask Claude to plan before it builds. Plan mode explores your codebase and proposes an approach before writing any code — perfect for complex features where you want to review the strategy first.",
+    "detection": {
+      "tool_name_pattern": "",
       "command_patterns": []
-    }
-  },
-  {
-    "id": "deploy",
-    "name": "Deploy to URL",
-    "branch": "deploy",
-    "color": "#3b82f6",
-    "difficulty": "adept",
-    "level": 5,
-    "tryIt": "Try saying: 'Deploy this project to Vercel so I can share the link'",
-    "prerequisites": ["run-dev-server"],
-    "description": "Ship your project to the internet so anyone can see it. Share a real, clickable URL with stakeholders — not just a screenshot.",
-    "position": { "x": 610, "y": 370 },
-    "detection": {
-      "tool_name": "Bash",
-      "command_patterns": ["netlify\\s+deploy", "vercel(\\s|$)", "npm\\s+run\\s+deploy", "firebase\\s+deploy", "gh-pages", "surge\\s+", "fly\\s+deploy", "wrangler\\s+(deploy|publish)", "railway\\s+up"]
-    }
-  },
-  {
-    "id": "push-to-main",
-    "name": "Push to Main",
-    "branch": "git",
-    "color": "#00ff88",
-    "difficulty": "adept",
-    "level": 5,
-    "tryIt": "Try saying: 'Merge my branch into main and push it'",
-    "prerequisites": ["use-branch"],
-    "description": "Merge your branch back into main and push it. This is how your changes become official and available to the rest of the team.",
-    "position": { "x": 350, "y": 165 },
-    "detection": {
-      "tool_name": "Bash",
-      "command_patterns": ["git\\s+push(\\s+(-u\\s+)?origin)?\\s+(main|master)", "gh\\s+pr\\s+merge"]
     }
   },
   {
@@ -300,9 +250,8 @@
     "difficulty": "master",
     "level": 5,
     "tryIt": "Try saying: 'Create a /component slash command that generates a React component from a description'",
-    "prerequisites": ["edit-claude-md"],
+    "prerequisites": [],
     "description": "Build a custom slash command that packages a complex workflow into a single action. Your own personalized Claude superpower.",
-    "position": { "x": 240, "y": 370 },
     "detection": {
       "tool_name_pattern": "Write",
       "command_patterns": [],
@@ -310,21 +259,49 @@
     }
   },
   {
-    "id": "build-multiple-screens",
-    "name": "Build Multiple Screens",
-    "branch": "figma",
-    "color": "#a855f7",
-    "difficulty": "master",
-    "level": 5,
-    "tryIt": "Say: 'Now build the settings page from the same Figma file'",
-    "prerequisites": ["build-from-figma"],
-    "description": "Build more than one screen from your Figma file. Scale from a single page prototype to a full multi-screen app.",
-    "position": { "x": 1080, "y": 165 },
+    "id": "generate-mockups",
+    "name": "Generate Mockups",
+    "branch": "features",
+    "color": "#ff8800",
+    "difficulty": "adept",
+    "level": 6,
+    "tryIt": "Try saying: 'Generate 3 different layout options for a dashboard as separate HTML files'",
+    "prerequisites": [],
+    "description": "Ask Claude to generate multiple HTML mockup variations for a single idea. Rapidly explore different layouts, styles, and approaches before committing to one direction.",
     "detection": {
-      "tool_name": "mcp__figma-desktop__get_design_context",
+      "tool_name_pattern": "Write",
       "command_patterns": [],
-      "track_unique_node_ids": true,
-      "required_count": 2
+      "file_patterns": ["mockup.*\\.html$", "variant.*\\.html$", "option.*\\.html$"]
+    }
+  },
+  {
+    "id": "deploy",
+    "name": "Deploy to URL",
+    "branch": "deploy",
+    "color": "#3b82f6",
+    "difficulty": "adept",
+    "level": 6,
+    "tryIt": "Try saying: 'Deploy this project to Vercel so I can share the link'",
+    "prerequisites": [],
+    "description": "Ship your project to the internet so anyone can see it. Share a real, clickable URL with stakeholders — not just a screenshot.",
+    "detection": {
+      "tool_name": "Bash",
+      "command_patterns": ["netlify\\s+deploy", "vercel(\\s|$)", "npm\\s+run\\s+deploy", "firebase\\s+deploy", "gh-pages", "surge\\s+", "fly\\s+deploy", "wrangler\\s+(deploy|publish)", "railway\\s+up"]
+    }
+  },
+  {
+    "id": "run-multiple-instances",
+    "name": "Run Multiple Instances of Claude",
+    "branch": "mastery",
+    "color": "#ffd700",
+    "difficulty": "master",
+    "level": 6,
+    "tryIt": "Open two terminals, run 'claude' in each, and give them different tasks at the same time",
+    "prerequisites": [],
+    "description": "Open multiple terminal tabs each running Claude Code on different tasks simultaneously. Parallelize your workflow — one instance builds the frontend while another sets up the backend.",
+    "detection": {
+      "tool_name_pattern": "",
+      "command_patterns": []
     }
   },
   {
@@ -333,11 +310,10 @@
     "branch": "features",
     "color": "#ff8800",
     "difficulty": "master",
-    "level": 6,
+    "level": 7,
     "tryIt": "Try saying: 'Build a chatbot that uses the Anthropic API with streaming responses'",
-    "prerequisites": ["run-dev-server"],
+    "prerequisites": [],
     "description": "Build a project that uses an AI API key, like a chatbot. Learn how real AI-powered features connect under the hood.",
-    "position": { "x": 740, "y": 370 },
     "detection": {
       "tool_name_pattern": "Bash|Write|Edit",
       "command_patterns": ["npm\\s+install.*(openai|anthropic|@google\\/generative|@ai-sdk)", "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"],

@@ -17,38 +17,48 @@
     mastery: 'Claude Mastery'
   };
 
+  const LEVEL_SUBTITLES = {
+    2: 'Basics',
+    3: 'GitHub',
+    4: 'Build from Figma',
+    5: 'Claude Tricks',
+    6: 'Phenomenal Cosmic Power',
+    7: 'Smart Systems: The Final Frontier'
+  };
+
   const SKILL_ICONS = {
+    'install-claude-code': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2',
     'create-project': 'M4 2h8l4 4v12a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2zm7 1v4h4M10 10v6M7 13h6',
+    'describe-and-build': 'M3 3h14v14H3V3zm3 4h8M6 9h8M6 11h5',
     'run-dev-server': 'M6 3l12 7-12 7V3z',
     'use-screenshots': 'M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm4 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM2 14l4-4 3 3 4-4 5 5',
+    'change-claude-model': 'M10 2a8 8 0 100 16 8 8 0 000-16zM10 6v4l3 2',
     'setup-github': 'M10 1C5 1 1 5 1 10c0 4 2.5 7.3 6 8.5.4.1.6-.2.6-.4v-1.5c-2.4.5-3-1.2-3-1.2-.4-1-1-1.3-1-1.3-.8-.5.1-.5.1-.5.9.1 1.4.9 1.4.9.8 1.3 2 1 2.5.7.1-.6.3-1 .5-1.2-2-.2-4-1-4-4.4 0-1 .3-1.8.9-2.4-.1-.2-.4-1.1.1-2.4 0 0 .7-.2 2.5 1a8.4 8.4 0 014.4 0c1.7-1.2 2.5-1 2.5-1 .5 1.3.2 2.2.1 2.4.5.6.9 1.4.9 2.4 0 3.4-2 4.2-4 4.4.3.3.6.8.6 1.7v2.5c0 .3.2.5.6.4 3.5-1.2 6-4.5 6-8.5 0-5-4-9-9-9z',
-    'use-branch': 'M5 3v10M15 3v4a4 4 0 01-4 4H5M15 3l-3-2M15 3l-3 2',
-    'push-to-main': 'M10 18V4M10 4l-5 5M10 4l5 5',
+    'clone-bhr-template': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2',
+    'create-branch': 'M5 3v10M15 3v4a4 4 0 01-4 4H5M15 3l-3-2M15 3l-3 2',
+    'commit-and-push': 'M10 18V4M10 4l-5 5M10 4l5 5',
     'connect-figma': 'M7 2h3a3 3 0 010 6H7V2zM7 8h3a3 3 0 010 6H7V8zM7 14h3a3 3 0 110 6H7v-6zM13 8a3 3 0 110 6 3 3 0 010-6zM4 5a3 3 0 110 6 3 3 0 010-6z',
-    'build-from-figma': 'M4 7l4-4 4 4M4 13l4 4 4-4M14 4l2 6-2 6',
-    'iterate-with-screenshots': 'M2 10a8 8 0 0114-5.3M18 10a8 8 0 01-14 5.3M2 10l2-2 2 2M18 10l-2 2-2-2',
-    'build-multiple-screens': 'M3 4h14v10H3zM5 2h14v10M7 6h6M7 8h4',
-    'create-chatbot': 'M3 4a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4v-4H5a2 2 0 01-2-2V4zm4 3h6M7 9h4',
-    'generate-mockups': 'M2 3h7v6H2V3zM11 3h7v6h-7V3zM2 11h7v6H2v-6zM11 11h7v6h-7v-6z',
+    'add-to-existing-screen': 'M3 3h14v14H3V3zM10 7v6M7 10h6',
+    'build-new-page-from-figma': 'M4 7l4-4 4 4M4 13l4 4 4-4M14 4l2 6-2 6',
     'use-playwright': 'M6 2v6a4 4 0 004 4 4 4 0 004-4V2M4 6h12M10 12v6M7 18h6',
-    'deploy': 'M10 18V6M10 2l-1 4h2l-1-4zM6 10l4-4 4 4M4 14c0 2 2.7 4 6 4s6-2 6-4',
     'edit-claude-md': 'M3 17.5V14l10-10 3.5 3.5L6.5 17.5H3zM11 6l3.5 3.5',
-    'create-intent-md': 'M5 2h8l4 4v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2zm7 1v4h4M7 10h6M7 13h6M7 16h3',
+    'use-plan-mode': 'M3 3h14v2H3V3zM3 8h10v2H3V8zM3 13h14v2H3v-2zM15 8l3 1-3 1',
     'create-skill': 'M10 1l2.5 6H19l-5.3 4 2 6.3L10 13.5l-5.7 3.8 2-6.3L1 7h6.5L10 1z',
-    'describe-and-build': 'M3 3h14v14H3V3zm3 4h8M6 9h8M6 11h5',
-    'clone-and-modify': 'M6 2v6l-4 4 4 4v4h2v-3l4-4-4-4V4h6v6l4 4-4 4v2h2v-1l4-4-4-4V2H6z',
-    'download-bhr': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2'
+    'generate-mockups': 'M2 3h7v6H2V3zM11 3h7v6h-7V3zM2 11h7v6H2v-6zM11 11h7v6h-7v-6z',
+    'deploy': 'M10 18V6M10 2l-1 4h2l-1-4zM6 10l4-4 4 4M4 14c0 2 2.7 4 6 4s6-2 6-4',
+    'run-multiple-instances': 'M2 3h7v5H2V3zM11 3h7v5h-7V3zM2 11h7v5H2v-5zM11 11h7v5h-7v-5z',
+    'create-chatbot': 'M3 4a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4v-4H5a2 2 0 01-2-2V4zm4 3h6M7 9h4'
   };
 
   const RANK_COLORS = ['#33334a', '#2dd4bf', '#3b82f6', '#a855f7', '#ff8800', '#ffd700', '#00d4ff'];
 
-  // Thresholds align with completing each level (21 skills, levels 0-6)
+  // Thresholds align with completing each level (21 skills, levels 0-7)
   function getCurrentRankIndex(completed) {
     if (completed >= 21) return 6;
-    if (completed >= 17) return 5;
-    if (completed >= 11) return 4;
-    if (completed >= 5)  return 3;
-    if (completed >= 2)  return 2;
+    if (completed >= 18) return 5;
+    if (completed >= 14) return 4;
+    if (completed >= 10) return 3;
+    if (completed >= 6)  return 2;
     if (completed >= 1)  return 1;
     return 0;
   }
@@ -484,7 +494,8 @@
 
       const label = document.createElement('div');
       label.className = 'level-label' + (isCurrent ? ' level-label-active' : '') + (allCompleted ? ' level-label-done' : '');
-      label.innerHTML = `<span class="level-dot${isCurrent ? ' level-dot-active' : ''}${allCompleted ? ' level-dot-done' : ''}"></span>Level ${lvl}`;
+      const subtitle = LEVEL_SUBTITLES[lvl] ? `<span class="level-subtitle">${LEVEL_SUBTITLES[lvl]}</span>` : '';
+      label.innerHTML = `<span class="level-dot${isCurrent ? ' level-dot-active' : ''}${allCompleted ? ' level-dot-done' : ''}"></span>Level ${lvl}${subtitle}`;
       row.appendChild(label);
 
       const cardsRow = document.createElement('div');
