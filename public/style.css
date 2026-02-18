@@ -9,7 +9,7 @@ body {
   color: #e0e0e0;
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -81,207 +81,203 @@ body::before {
   text-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 
+/* Color legend */
+.legend {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 20px 18px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #666;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 /* Tree container */
 .tree-container {
   position: relative;
   z-index: 5;
+  padding: 20px 20px 60px;
+}
+
+/* Levels layout */
+.levels-container {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 90px);
-  padding: 0 20px;
+  flex-direction: column;
+  gap: 0;
 }
 
-#treeSvg {
-  max-width: 1400px;
-  max-height: 100%;
-  width: 100%;
+.level-row {
+  margin-bottom: 32px;
 }
 
-/* SVG node styles */
-.node-group {
+.level-label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #555;
+  font-weight: 700;
+  margin-bottom: 12px;
+  padding-left: 2px;
+}
+
+.level-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Skill card */
+.skill-card {
+  width: 160px;
+  min-height: 200px;
+  background: #0d0d1a;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: default;
+}
+
+.skill-card.available,
+.skill-card.completed {
   cursor: pointer;
 }
 
-.node-circle {
-  transition: all 0.3s ease;
+.skill-card.available:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.25);
 }
 
-.node-label {
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  fill: #666;
-  text-anchor: middle;
-  pointer-events: none;
-  transition: fill 0.3s ease;
+.skill-card.completed:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.2);
 }
 
-.node-number {
-  font-family: 'SF Mono', 'Fira Code', monospace;
+.skill-card.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Color accent bar at top of card */
+.card-accent {
+  height: 3px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Card icon */
+.card-icon {
+  padding: 16px 16px 8px;
+  flex-shrink: 0;
+}
+
+/* Card name */
+.card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ccc;
+  padding: 0 16px 8px;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.skill-card.completed .card-name {
+  color: #fff;
+}
+
+/* Card branch label */
+.card-branch {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0 16px 8px;
+  opacity: 0.75;
+}
+
+
+/* Checkmark overlay for completed */
+.card-check {
+  position: absolute;
+  top: 10px;
+  right: 12px;
   font-size: 14px;
   font-weight: 700;
-  fill: #444;
-  text-anchor: middle;
-  dominant-baseline: central;
-  pointer-events: none;
-  transition: fill 0.3s ease;
+  opacity: 0.85;
 }
 
-.node-check {
-  font-size: 16px;
-  fill: #fff;
-  text-anchor: middle;
-  dominant-baseline: central;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Locked card redacted content */
+.card-locked-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
 }
 
-/* Node icon paths */
-.node-icon {
-  pointer-events: none;
-  transition: stroke 0.3s ease;
+.redacted-line {
+  height: 10px;
+  background: #2a2a3a;
+  border-radius: 4px;
 }
 
-/* Connection lines */
-.connection-line {
-  stroke: #5a5a80;
-  stroke-width: 2;
-  fill: none;
-  transition: stroke 0.5s ease, stroke-opacity 0.5s ease;
+.redacted-line:first-child {
+  height: 14px;
+  border-radius: 50%;
+  width: 40px !important;
 }
 
-.connection-line.active {
-  stroke-width: 2;
-  stroke-opacity: 0.4;
+/* Recommended card — subtle cyan pulse */
+@keyframes recommended-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); border-color: rgba(0, 212, 255, 0.3); }
+  50% { box-shadow: 0 0 16px 2px rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.6); }
 }
 
-.connection-line.completed {
-  stroke-width: 2.5;
-  stroke-opacity: 0.8;
+.skill-card.recommended {
+  animation: recommended-pulse 2.5s ease-in-out infinite;
 }
 
-/* Node states */
-.node-locked .node-circle {
-  fill: #3a3a65;
-  stroke: #7070a0;
-  stroke-width: 2;
+/* Card unlock animation */
+@keyframes card-unlock-burst {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.08); box-shadow: 0 0 30px rgba(0, 212, 255, 0.4); }
+  60% { transform: scale(0.97); }
+  100% { transform: scale(1); }
 }
 
-.node-locked .node-number {
-  fill: #b0b0c8;
+.card-unlocking {
+  animation: card-unlock-burst 0.7s ease-out;
 }
 
-.node-locked .node-icon {
-  stroke: #b0b0c8;
-}
-
-.node-locked .node-label {
-  fill: #a0a0b8;
-}
-
-.node-available .node-circle {
-  fill: #0d0d1a;
-  stroke: #00d4ff;
-  stroke-width: 2;
-  stroke-opacity: 0.4;
-  animation: pulse 2.5s ease-in-out infinite;
-}
-
-.node-available .node-label {
-  fill: #888;
-}
-
-.node-available .node-number {
-  fill: #00d4ff;
-  opacity: 0.7;
-}
-
-.node-available .node-icon {
-  stroke: #00d4ff;
-  opacity: 0.7;
-}
-
-.node-completed .node-label {
-  fill: #ddd;
-  font-weight: 600;
-}
-
-.node-completed .node-number {
-  fill: transparent;
-}
-
-.node-completed .node-check {
-  opacity: 1;
-}
-
-/* Branch progress indicators */
-.branch-progress {
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 12px;
-  text-anchor: middle;
-  pointer-events: none;
-  letter-spacing: 1px;
-}
-
-/* START HERE callout */
-@keyframes start-pulse-ring {
-  0% { r: 28; opacity: 0.6; }
-  100% { r: 48; opacity: 0; }
-}
-
-@keyframes start-bounce-arrow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes start-glow-text {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
-}
-
-.start-here-ring {
-  fill: none;
-  stroke: #00d4ff;
-  stroke-width: 2;
-  animation: start-pulse-ring 1.5s ease-out infinite;
-}
-
-.start-here-arrow {
-  fill: #00d4ff;
-  animation: start-bounce-arrow 1s ease-in-out infinite;
-}
-
-.start-here-text {
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 10px;
-  font-weight: 700;
-  fill: #00d4ff;
-  text-anchor: middle;
-  letter-spacing: 3px;
-  animation: start-glow-text 1.5s ease-in-out infinite;
-}
-
-/* Unlock animation */
-@keyframes pulse {
-  0%, 100% { stroke-opacity: 0.3; }
-  50% { stroke-opacity: 0.7; }
-}
-
-@keyframes unlock-burst {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.node-unlocking {
-  animation: unlock-burst 0.6s ease-out;
-}
-
-/* Detail panel — popover next to node */
+/* Detail panel — centered modal */
 .detail-panel {
   position: fixed;
-  width: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 320px;
   background: rgba(12, 12, 24, 0.97);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 12px;
@@ -289,16 +285,15 @@ body::before {
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  transform: scale(0.95);
   transition: opacity 0.2s ease, transform 0.2s ease;
   backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.4);
 }
 
 .detail-panel.open {
   opacity: 1;
   pointer-events: auto;
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .detail-close {
@@ -475,18 +470,6 @@ body::before {
   to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* Branch labels */
-.branch-label {
-  position: fixed;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-weight: 700;
-  opacity: 0.3;
-  pointer-events: none;
-  z-index: 1;
-}
-
 /* Completion screen */
 .completion-overlay {
   position: fixed;
@@ -519,71 +502,3 @@ body::before {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
-/* Hover tooltip */
-.hover-tooltip {
-  position: fixed;
-  max-width: 240px;
-  background: rgba(12, 12, 24, 0.95);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px;
-  padding: 10px 14px;
-  z-index: 90;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-}
-
-.hover-tooltip.visible {
-  opacity: 1;
-}
-
-.tooltip-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.tooltip-desc {
-  font-size: 11px;
-  color: #888;
-  line-height: 1.4;
-  margin-bottom: 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.tooltip-difficulty {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-}
-
-.tooltip-difficulty.beginner { color: #b0b8c8; }
-.tooltip-difficulty.adept { color: #60a5fa; }
-.tooltip-difficulty.master { color: #ffaa00; }
-
-/* Recommended next glow */
-@keyframes recommended-pulse {
-  0%, 100% { stroke-opacity: 0.4; filter: drop-shadow(0 0 4px #00d4ff); }
-  50% { stroke-opacity: 0.9; filter: drop-shadow(0 0 12px #00d4ff); }
-}
-
-.node-recommended .node-circle {
-  animation: recommended-pulse 2s ease-in-out infinite;
-}
-
-/* Difficulty pip on node */
-.difficulty-pip {
-  pointer-events: none;
-}
-
-.difficulty-pip.beginner { fill: #b0b8c8; }
-.difficulty-pip.adept { fill: #60a5fa; }
-.difficulty-pip.master { fill: #ffaa00; }
