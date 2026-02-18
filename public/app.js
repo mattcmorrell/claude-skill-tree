@@ -477,9 +477,15 @@
       const row = document.createElement('div');
       row.className = 'level-row';
 
+      // Determine if this level is the current active one
+      const levelStates = byLevel[lvl].map(s => getNodeState(s));
+      const hasAvailable = levelStates.includes('available');
+      const allCompleted = levelStates.every(st => st === 'completed');
+      const isCurrent = hasAvailable && !allCompleted;
+
       const label = document.createElement('div');
-      label.className = 'level-label';
-      label.innerHTML = `<span class="level-dot"></span>Level ${lvl}`;
+      label.className = 'level-label' + (isCurrent ? ' level-label-active' : '') + (allCompleted ? ' level-label-done' : '');
+      label.innerHTML = `<span class="level-dot${isCurrent ? ' level-dot-active' : ''}${allCompleted ? ' level-dot-done' : ''}"></span>Level ${lvl}`;
       row.appendChild(label);
 
       const cardsRow = document.createElement('div');
@@ -604,12 +610,6 @@
     setTimeout(() => toast.remove(), 4000);
   }
 
-  function animateUnlock(skillId) {
-    const card = document.querySelector(`[data-skill-id="${skillId}"]`);
-    if (!card) return;
-    card.classList.add('card-unlocking');
-    setTimeout(() => card.classList.remove('card-unlocking'), 700);
-  }
 
   function showCompletion() {
     if (document.querySelector('.completion-overlay')) return;
@@ -648,16 +648,21 @@
 
         newlyCompleted.forEach(id => {
           const skill = skills.find(s => s.id === id);
-          if (skill) {
-            animateUnlock(id);
-            showToast(skill.name);
-          }
+          if (skill) showToast(skill.name);
         });
       } catch (e) {
         // server might be down, ignore
       }
     }, 2000);
   }
+
+  document.getElementById('resetBtn').addEventListener('click', async () => {
+    if (!confirm('Reset all progress? This can\'t be undone.')) return;
+    const res = await fetch('/api/reset', { method: 'POST' });
+    progress = await res.json();
+    previousCompleted = new Set();
+    render();
+  });
 
   await fetchSkills();
   await fetchProgress();
