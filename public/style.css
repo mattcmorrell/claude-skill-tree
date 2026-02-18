@@ -163,6 +163,13 @@ body::before {
   margin-bottom: 32px;
 }
 
+.level-connector {
+  width: 2px;
+  height: 24px;
+  background: rgba(255,255,255,0.08);
+  margin: 0 0 0 7px;
+}
+
 .level-label {
   font-size: 13px;
   text-transform: uppercase;
@@ -170,7 +177,19 @@ body::before {
   color: #555;
   font-weight: 700;
   margin-bottom: 12px;
-  padding-left: 2px;
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.level-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  border: 2px solid rgba(255,255,255,0.12);
+  flex-shrink: 0;
 }
 
 .level-cards {

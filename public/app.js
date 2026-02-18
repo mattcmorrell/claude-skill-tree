@@ -325,28 +325,14 @@
     return map;
   }
 
-  // Get recommended next skill
+  // Get recommended next skill — first incomplete in the lowest available level
   function getRecommendedNext() {
     const available = skills.filter(s => getNodeState(s) === 'available');
     if (available.length === 0) return null;
-    if (available.length === 1) return available[0].id;
-
-    function countDownstream(skillId, visited = new Set()) {
-      if (visited.has(skillId)) return 0;
-      visited.add(skillId);
-      const children = skills.filter(s => s.prerequisites.includes(skillId));
-      let count = children.length;
-      children.forEach(c => { count += countDownstream(c.id, visited); });
-      return count;
-    }
-
-    let best = available[0];
-    let bestCount = countDownstream(best.id);
-    for (let i = 1; i < available.length; i++) {
-      const c = countDownstream(available[i].id);
-      if (c > bestCount) { bestCount = c; best = available[i]; }
-    }
-    return best.id;
+    // Pick from the lowest level that has available skills
+    const lowestLevel = Math.min(...available.map(s => s.level || 1));
+    const candidates = available.filter(s => (s.level || 1) === lowestLevel);
+    return candidates[0].id;
   }
 
   function hexToRgba(hex, alpha) {
@@ -480,13 +466,20 @@
     const byLevel = groupByLevel(skills);
     const levels = Object.keys(byLevel).map(Number).sort((a, b) => a - b);
 
-    levels.forEach(lvl => {
+    levels.forEach((lvl, idx) => {
+      // Connecting line between levels (except before the first)
+      if (idx > 0) {
+        const connector = document.createElement('div');
+        connector.className = 'level-connector';
+        container.appendChild(connector);
+      }
+
       const row = document.createElement('div');
       row.className = 'level-row';
 
       const label = document.createElement('div');
       label.className = 'level-label';
-      label.textContent = `Level ${lvl}`;
+      label.innerHTML = `<span class="level-dot"></span>Level ${lvl}`;
       row.appendChild(label);
 
       const cardsRow = document.createElement('div');
