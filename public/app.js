@@ -594,6 +594,8 @@
   async function toggleSkill(skillId) {
     const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
     progress = await res.json();
+    document.getElementById('detailPanel').classList.remove('open');
+    selectedSkill = null;
     render();
   }
 
