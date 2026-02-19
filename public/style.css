@@ -81,6 +81,66 @@ body::before {
   text-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 
+/* Mode toggle */
+.mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s;
+}
+.mode-toggle:hover {
+  border-color: rgba(0,212,255,0.3);
+}
+.mode-toggle-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.mode-toggle-label.active {
+  color: #00d4ff;
+}
+.mode-toggle-label.inactive {
+  color: #444;
+}
+.mode-toggle-pip {
+  width: 28px;
+  height: 14px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 7px;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.mode-toggle-pip::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #444;
+  transition: transform 0.2s, background 0.2s;
+}
+.mode-toggle.codex-active .mode-toggle-pip {
+  background: rgba(0,212,255,0.15);
+}
+.mode-toggle.codex-active .mode-toggle-pip::after {
+  transform: translateX(14px);
+  background: #00d4ff;
+}
+.mode-toggle.codex-active .mode-toggle-label.inactive { color: #00d4ff; }
+.mode-toggle.codex-active .mode-toggle-label.active  { color: #444; }
+
 /* Rank badge */
 .rank-badge-container {
   position: fixed;

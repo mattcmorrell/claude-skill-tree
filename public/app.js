@@ -51,6 +51,93 @@
     'create-chatbot': 'M3 4a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H8l-4 4v-4H5a2 2 0 01-2-2V4zm4 3h6M7 9h4'
   };
 
+  // Codex-mode overrides — only fields that differ
+  const CODEX_OVERRIDES = {
+    'install-claude-code': {
+      name: 'Install Codex CLI',
+      description: 'Install the Codex CLI on your machine. This is where it all begins — one command and you\'re ready to start building with AI.',
+      tryIt: 'Run: npm install -g @openai/codex'
+    },
+    'change-claude-model': {
+      name: 'Change Your Model',
+      description: 'Switch between models to balance speed and capability. Use a fast model for quick edits and a powerful one when you need deep reasoning or complex builds.',
+      tryIt: 'Type /model in Codex to switch models'
+    },
+    'edit-claude-md': {
+      name: 'Edit AGENTS.md',
+      description: 'Customize how Codex behaves in your project by editing its instructions file (AGENTS.md). Set your preferences, conventions, and constraints so Codex codes the way you want.',
+      tryIt: 'Try saying: \'Create an AGENTS.md that tells Codex to use Tailwind and keep code simple\''
+    },
+    'use-plan-mode': {
+      name: 'Use Plan Mode',
+      description: 'Ask Codex to plan before it builds. Use /plan to explore your codebase and propose an approach before writing any code — perfect for complex features where you want to review the strategy first.',
+      tryIt: 'Type /plan, then say: \'Plan how you\'d implement a settings page before building it\''
+    },
+    'create-skill': {
+      name: 'Create a Skill',
+      description: 'Build a custom skill using a SKILL.md file that packages a complex workflow into a reusable action. Your own personalized Codex superpower.',
+      tryIt: 'Try saying: \'Create a skill that generates a React component from a description\''
+    },
+    'describe-and-build': {
+      description: 'Tell Codex what you want in plain language and watch it write the code. This is the core skill — describe your vision, get working software.'
+    },
+    'run-dev-server': {
+      description: 'Start a local server so you can preview your work in a browser in real-time. See changes instantly as Codex builds your UI.',
+      tryIt: 'Try saying: \'Start the dev server so I can see my app in the browser\' (requires network access enabled in Codex config)'
+    },
+    'iterate-on-styling': {
+      description: 'Tell Codex to tweak colors, spacing, fonts, and layout. Describe what you want changed and watch it update the code in real time.'
+    },
+    'use-screenshots': {
+      description: 'Take a screenshot of your running app and share it with Codex. The most natural way to give feedback — just show it what needs fixing.',
+      tryIt: 'Give Codex a screenshot and tell it what to fix, or ask it what needs to be fixed.'
+    }
+  };
+
+  let codexMode = localStorage.getItem('codex-mode') === 'true';
+
+  function getSkillText(skill) {
+    if (!codexMode) return { name: skill.name, description: skill.description, tryIt: skill.tryIt };
+    const o = CODEX_OVERRIDES[skill.id] || {};
+    return {
+      name: o.name || skill.name,
+      description: o.description || skill.description,
+      tryIt: o.tryIt || skill.tryIt
+    };
+  }
+
+  function buildModeToggle() {
+    const existing = document.getElementById('modeToggle');
+    if (existing) existing.remove();
+
+    const toggle = document.createElement('div');
+    toggle.id = 'modeToggle';
+    toggle.className = 'mode-toggle' + (codexMode ? ' codex-active' : '');
+    toggle.innerHTML = `
+      <span class="mode-toggle-label ${codexMode ? 'inactive' : 'active'}">Claude Code</span>
+      <div class="mode-toggle-pip"></div>
+      <span class="mode-toggle-label ${codexMode ? 'active' : 'inactive'}">Codex</span>
+    `;
+    toggle.addEventListener('click', () => {
+      codexMode = !codexMode;
+      localStorage.setItem('codex-mode', codexMode);
+      buildModeToggle();
+      updateHeaderTitle();
+      render();
+    });
+
+    const header = document.querySelector('.header');
+    header.appendChild(toggle);
+  }
+
+  function updateHeaderTitle() {
+    const h1 = document.querySelector('.header h1');
+    if (!h1) return;
+    h1.innerHTML = codexMode
+      ? 'Codex <span class="accent">Skill Tree</span>'
+      : 'Claude Code <span class="accent">Skill Tree</span>';
+  }
+
   const RANK_COLORS = ['#33334a', '#2dd4bf', '#3b82f6', '#a855f7', '#ff8800', '#ffd700', '#00d4ff'];
 
   // Thresholds align with completing each level (22 skills, levels 0-7)
@@ -419,7 +506,7 @@
     // Name
     const name = document.createElement('div');
     name.className = 'card-name';
-    name.textContent = skill.name;
+    name.textContent = getSkillText(skill).name;
     card.appendChild(name);
 
     // Branch label
@@ -581,14 +668,15 @@
     const tryItEl = document.getElementById('detailTryIt');
     const diffEl = document.getElementById('detailDifficulty');
 
+    const text = getSkillText(skill);
     branchEl.textContent = BRANCH_LABELS[skill.branch];
     branchEl.style.color = BRANCH_COLORS[skill.branch];
-    nameEl.textContent = skill.name;
-    descEl.textContent = skill.description;
+    nameEl.textContent = text.name;
+    descEl.textContent = text.description;
 
     diffEl.style.display = 'none';
 
-    tryItEl.textContent = skill.tryIt || '';
+    tryItEl.textContent = text.tryIt || '';
 
     statusEl.className = `detail-status ${state}`;
     if (state === 'completed') {
@@ -789,6 +877,9 @@
 
   await fetchSkills();
   await fetchProgress();
+
+  buildModeToggle();
+  updateHeaderTitle();
 
   previousCompleted = new Set(
     Object.entries(progress.skills)
