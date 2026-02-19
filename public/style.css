@@ -84,8 +84,10 @@ body::before {
 /* Mode toggle — segmented control */
 .mode-toggle {
   position: relative;
-  display: inline-flex;
-  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 340px;
+  margin: 16px auto 0;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 999px;
@@ -114,9 +116,8 @@ body::before {
 .mode-toggle-segment {
   position: relative;
   z-index: 1;
-  flex: 1;
   text-align: center;
-  padding: 8px 36px;
+  padding: 8px 0;
   font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;

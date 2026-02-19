@@ -91,10 +91,33 @@
     'use-screenshots': {
       description: 'Take a screenshot of your running app and share it with Codex. The most natural way to give feedback — just show it what needs fixing.',
       tryIt: 'Give Codex a screenshot and tell it what to fix, or ask it what needs to be fixed.'
+    },
+    'connect-figma': {
+      description: 'Link Figma directly to Codex so it can see your actual design files — not just descriptions of them. This is the bridge between design and code.'
+    },
+    'build-new-page-from-figma': {
+      description: 'Give Codex a Figma link and have it generate a complete new page from scratch. Go from a design file to working code in minutes.'
+    },
+    'generate-mockups': {
+      description: 'Ask Codex to generate multiple HTML mockup variations for a single idea. Rapidly explore different layouts, styles, and approaches before committing to one direction.'
+    },
+    'run-multiple-instances': {
+      name: 'Run Multiple Instances of Codex',
+      description: 'Open multiple terminal tabs each running Codex on different tasks simultaneously. Parallelize your workflow — one instance builds the frontend while another sets up the backend.'
     }
   };
 
   let codexMode = localStorage.getItem('codex-mode') === 'true';
+
+  function getBranchLabel(key) {
+    const label = BRANCH_LABELS[key] || key;
+    return codexMode ? label.replace('Claude', 'Codex') : label;
+  }
+
+  function getLevelSubtitle(lvl) {
+    const sub = LEVEL_SUBTITLES[lvl] || '';
+    return codexMode ? sub.replace('Claude', 'Codex') : sub;
+  }
 
   function getSkillText(skill) {
     if (!codexMode) return { name: skill.name, description: skill.description, tryIt: skill.tryIt };
@@ -436,14 +459,13 @@
     }
   }
 
-  // Locked if the previous level isn't fully completed
+  // Locked if prerequisites aren't completed
   function getNodeState(skill) {
     if (progress.skills[skill.id]?.completed) return 'completed';
-    const skillLevel = skill.level ?? 1;
-    if (skillLevel === 1) return 'available';
-    const prevLevelSkills = skills.filter(s => s.level === skillLevel - 1);
-    const prevLevelDone = prevLevelSkills.every(s => progress.skills[s.id]?.completed);
-    return prevLevelDone ? 'available' : 'locked';
+    const prereqs = skill.prerequisites || [];
+    if (prereqs.length === 0) return 'available';
+    const allPrereqsMet = prereqs.every(pid => progress.skills[pid]?.completed);
+    return allPrereqsMet ? 'available' : 'locked';
   }
 
   // Group skills array by level field
@@ -512,7 +534,7 @@
     // Branch label
     const branch = document.createElement('div');
     branch.className = 'card-branch';
-    branch.textContent = BRANCH_LABELS[skill.branch] || skill.branch;
+    branch.textContent = getBranchLabel(skill.branch);
     branch.style.color = state === 'locked' ? '#333' : skill.color;
     card.appendChild(branch);
 
@@ -551,8 +573,8 @@
 
   function renderLegend() {
     const legend = document.getElementById('legend');
-    if (!legend || legend.dataset.built) return;
-    legend.dataset.built = '1';
+    if (!legend) return;
+    legend.innerHTML = '';
     Object.entries(BRANCH_LABELS).forEach(([key, label]) => {
       const item = document.createElement('div');
       item.className = 'legend-item';
@@ -561,7 +583,7 @@
       dot.style.background = BRANCH_COLORS[key];
       dot.style.boxShadow = `0 0 6px ${BRANCH_COLORS[key]}88`;
       const text = document.createElement('span');
-      text.textContent = label;
+      text.textContent = getBranchLabel(key);
       item.appendChild(dot);
       item.appendChild(text);
       legend.appendChild(item);
@@ -597,7 +619,8 @@
 
       const label = document.createElement('div');
       label.className = 'level-label' + (isCurrent ? ' level-label-active' : '') + (allCompleted ? ' level-label-done' : '');
-      const subtitle = LEVEL_SUBTITLES[lvl] ? `<span class="level-subtitle">${LEVEL_SUBTITLES[lvl]}</span>` : '';
+      const sub = getLevelSubtitle(lvl);
+      const subtitle = sub ? `<span class="level-subtitle">${sub}</span>` : '';
       label.innerHTML = `<span class="level-dot${isCurrent ? ' level-dot-active' : ''}${allCompleted ? ' level-dot-done' : ''}"></span>Level ${lvl}${subtitle}`;
       row.appendChild(label);
 
@@ -669,7 +692,7 @@
     const diffEl = document.getElementById('detailDifficulty');
 
     const text = getSkillText(skill);
-    branchEl.textContent = BRANCH_LABELS[skill.branch];
+    branchEl.textContent = getBranchLabel(skill.branch);
     branchEl.style.color = BRANCH_COLORS[skill.branch];
     nameEl.textContent = text.name;
     descEl.textContent = text.description;
@@ -759,7 +782,7 @@
   }
 
   function showLevelUp(level) {
-    const subtitle = LEVEL_SUBTITLES[level + 1] || '';
+    const subtitle = getLevelSubtitle(level + 1);
     const nextLabel = level + 1 <= 7 ? `Level ${level + 1}${subtitle ? ' — ' + subtitle : ''} unlocked` : '';
 
     const overlay = document.createElement('div');
@@ -820,7 +843,7 @@
       <div class="completion-message">
         <div class="completion-icon">${buildBadgeSvg(6)}</div>
         <h2>ALL SKILLS UNLOCKED</h2>
-        <p>You've mastered Claude Code. Now go build something amazing.</p>
+        <p>You've mastered ${codexMode ? 'Codex' : 'Claude Code'}. Now go build something amazing.</p>
         <div class="completion-dismiss">click anywhere to close</div>
       </div>
     `;
