@@ -100,7 +100,7 @@ body::before {
   position: absolute;
   top: 3px;
   left: 3px;
-  width: calc(50% - 3px);
+  width: calc(50% - 6px);
   height: calc(100% - 6px);
   background: rgba(0, 212, 255, 0.1);
   border: 1px solid rgba(0, 212, 255, 0.25);
@@ -109,7 +109,7 @@ body::before {
   pointer-events: none;
 }
 .mode-toggle.codex-active .mode-toggle-indicator {
-  transform: translateX(calc(100% + 3px));
+  transform: translateX(calc(100% + 6px));
 }
 .mode-toggle-segment {
   position: relative;
