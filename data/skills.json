@@ -67,9 +67,9 @@
     "color": "#2dd4bf",
     "difficulty": "beginner",
     "level": 2,
-    "tryIt": "Try saying: 'Take a screenshot and tell me what looks off'",
+    "tryIt": "Give Claude a screenshot and tell it what to fix, or ask it what needs to be fixed.",
     "prerequisites": [],
-    "description": "Take a screenshot of your running app and share it with Claude. The most natural way to give feedback — just show it what needs fixing.",
+    "description": "Take a screenshot of your running app (Ctrl+Cmd+Shift+4) and paste it into your Claude window (Cmd+V in Claude app, Ctrl+V in the terminal). The most natural way to give feedback — just show it what needs fixing.",
     "detection": {
       "tool_name_pattern": "mcp__playwright__browser_(take_screenshot|snapshot)",
       "command_patterns": []
@@ -82,7 +82,7 @@
     "color": "#ffd700",
     "difficulty": "beginner",
     "level": 2,
-    "tryIt": "Press Shift+Tab in Claude Code to toggle between models, or try /model",
+    "tryIt": "Type /model in Claude Code to switch models, or try saying: 'Use Opus for this task'",
     "prerequisites": [],
     "description": "Switch between Claude models like Sonnet and Opus to balance speed and capability. Use a fast model for quick edits and a powerful one when you need deep reasoning or complex builds.",
     "detection": {
@@ -265,7 +265,7 @@
     "color": "#ff8800",
     "difficulty": "adept",
     "level": 6,
-    "tryIt": "Try saying: 'Generate 3 different layout options for a dashboard as separate HTML files'",
+    "tryIt": "Try saying: 'Generate 3 different layout options for a dashboard as a single HTML file with a way to switch between them'",
     "prerequisites": [],
     "description": "Ask Claude to generate multiple HTML mockup variations for a single idea. Rapidly explore different layouts, styles, and approaches before committing to one direction.",
     "detection": {
@@ -281,7 +281,7 @@
     "color": "#3b82f6",
     "difficulty": "adept",
     "level": 6,
-    "tryIt": "Try saying: 'Deploy this project to Vercel so I can share the link'",
+    "tryIt": "Try saying: 'Help me deploy this project to Vercel or Netlify so I can share the link'",
     "prerequisites": [],
     "description": "Ship your project to the internet so anyone can see it. Share a real, clickable URL with stakeholders — not just a screenshot.",
     "detection": {

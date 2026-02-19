@@ -44,7 +44,9 @@ app.post('/api/toggle/:skillId', (req, res) => {
     };
   }
 
-  progress.totalCompleted = Object.values(progress.skills).filter(s => s.completed).length;
+  // Only count skills that exist in the current skills.json
+  const validSkillIds = new Set(JSON.parse(fs.readFileSync(SKILLS_FILE, 'utf8')).map(s => s.id));
+  progress.totalCompleted = Object.entries(progress.skills).filter(([id, s]) => s.completed && validSkillIds.has(id)).length;
   progress.lastUpdated = new Date().toISOString();
 
   fs.writeFileSync(PROGRESS_FILE, JSON.stringify(progress, null, 2));
