@@ -335,16 +335,6 @@
     return map;
   }
 
-  // Get recommended next skill — first incomplete in the lowest available level
-  function getRecommendedNext() {
-    const available = skills.filter(s => getNodeState(s) === 'available');
-    if (available.length === 0) return null;
-    // Pick from the lowest level that has available skills
-    const lowestLevel = Math.min(...available.map(s => s.level || 1));
-    const candidates = available.filter(s => (s.level || 1) === lowestLevel);
-    return candidates[0].id;
-  }
-
   function hexToRgba(hex, alpha) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -353,10 +343,9 @@
   }
 
   // Build a card DOM element
-  function createCard(skill, state, isRecommended) {
+  function createCard(skill, state) {
     const card = document.createElement('div');
     card.className = `skill-card ${state}`;
-    if (isRecommended) card.classList.add('recommended');
     card.dataset.skillId = skill.id;
 
     if (state === 'completed') {
@@ -464,7 +453,6 @@
     const container = document.getElementById('levelsContainer');
     container.innerHTML = '';
 
-    const recommendedId = getRecommendedNext();
     const byLevel = groupByLevel(skills);
     const levels = Object.keys(byLevel).map(Number).sort((a, b) => a - b);
 
@@ -496,8 +484,7 @@
 
       byLevel[lvl].forEach(skill => {
         const state = getNodeState(skill);
-        const isRec = skill.id === recommendedId;
-        const card = createCard(skill, state, isRec);
+        const card = createCard(skill, state);
         cardsRow.appendChild(card);
       });
 
