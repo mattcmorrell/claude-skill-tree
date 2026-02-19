@@ -587,12 +587,60 @@
 
 
   async function toggleSkill(skillId) {
+    const prevLevels = getCompletedLevels();
     const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
     progress = await res.json();
     document.getElementById('detailPanel').classList.remove('open');
     document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
     selectedSkill = null;
     render();
+    checkLevelUp(prevLevels);
+  }
+
+  function getCompletedLevels() {
+    const byLevel = groupByLevel(skills);
+    const completed = new Set();
+    Object.entries(byLevel).forEach(([lvl, levelSkills]) => {
+      if (levelSkills.every(s => progress.skills[s.id]?.completed)) {
+        completed.add(Number(lvl));
+      }
+    });
+    return completed;
+  }
+
+  let previousCompletedLevels = new Set();
+
+  function checkLevelUp(prevLevels) {
+    const currentLevels = getCompletedLevels();
+    currentLevels.forEach(lvl => {
+      if (!prevLevels.has(lvl)) {
+        showLevelUp(lvl);
+      }
+    });
+    previousCompletedLevels = currentLevels;
+  }
+
+  function showLevelUp(level) {
+    const subtitle = LEVEL_SUBTITLES[level + 1] || '';
+    const nextLabel = level + 1 <= 7 ? `Level ${level + 1}${subtitle ? ' — ' + subtitle : ''} unlocked` : '';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'levelup-overlay';
+    overlay.innerHTML = `
+      <div class="levelup-content">
+        <div class="levelup-flash"></div>
+        <div class="levelup-badge">▲</div>
+        <div class="levelup-title">LEVEL ${level} COMPLETE</div>
+        ${nextLabel ? `<div class="levelup-next">${nextLabel}</div>` : ''}
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => overlay.classList.add('levelup-visible'), 10);
+    setTimeout(() => {
+      overlay.classList.remove('levelup-visible');
+      overlay.classList.add('levelup-exit');
+      setTimeout(() => overlay.remove(), 600);
+    }, 2500);
   }
 
   function showToast(skillName) {
@@ -634,6 +682,7 @@
 
         if (newlyCompleted.length === 0) return;
 
+        const prevLevels = getCompletedLevels();
         progress = newProgress;
         previousCompleted = new Set(
           Object.entries(progress.skills)
@@ -642,6 +691,7 @@
         );
 
         render();
+        checkLevelUp(prevLevels);
 
         newlyCompleted.forEach(id => {
           const skill = skills.find(s => s.id === id);
@@ -670,6 +720,7 @@
       .map(([id]) => id)
   );
 
+  previousCompletedLevels = getCompletedLevels();
   render();
   startPolling();
 })();

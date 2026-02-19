@@ -592,6 +592,83 @@ body::before {
   border-color: rgba(255, 68, 68, 0.3);
 }
 
+/* Level up animation */
+.levelup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 400;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.levelup-overlay.levelup-visible {
+  opacity: 1;
+}
+
+.levelup-overlay.levelup-exit {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.levelup-content {
+  text-align: center;
+  position: relative;
+}
+
+.levelup-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+  animation: levelup-flash-pulse 0.8s ease-out;
+}
+
+@keyframes levelup-flash-pulse {
+  0% { opacity: 0; transform: scale(0.8); }
+  30% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
+.levelup-badge {
+  font-size: 48px;
+  color: #00d4ff;
+  text-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(0, 212, 255, 0.3);
+  animation: levelup-badge-enter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: 12px;
+}
+
+@keyframes levelup-badge-enter {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.levelup-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  animation: levelup-text-enter 0.5s ease-out 0.2s both;
+}
+
+@keyframes levelup-text-enter {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.levelup-next {
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(0, 212, 255, 0.6);
+  margin-top: 12px;
+  animation: levelup-text-enter 0.5s ease-out 0.5s both;
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
