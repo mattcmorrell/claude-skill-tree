@@ -81,65 +81,48 @@ body::before {
   text-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 
-/* Mode toggle */
+/* Mode toggle — segmented control */
 .mode-toggle {
+  position: relative;
   display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  padding: 6px 14px;
+  margin-top: 16px;
   background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 999px;
   cursor: pointer;
   user-select: none;
-  transition: border-color 0.2s;
+  overflow: hidden;
 }
-.mode-toggle:hover {
-  border-color: rgba(0,212,255,0.3);
-}
-.mode-toggle-label {
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 600;
-  transition: color 0.2s;
-}
-.mode-toggle-label.active {
-  color: #00d4ff;
-}
-.mode-toggle-label.inactive {
-  color: #444;
-}
-.mode-toggle-pip {
-  width: 28px;
-  height: 14px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 7px;
-  position: relative;
-  transition: background 0.2s;
-  flex-shrink: 0;
-}
-.mode-toggle-pip::after {
-  content: '';
+.mode-toggle-indicator {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #444;
-  transition: transform 0.2s, background 0.2s;
-}
-.mode-toggle.codex-active .mode-toggle-pip {
-  background: rgba(0,212,255,0.15);
-}
-.mode-toggle.codex-active .mode-toggle-pip::after {
-  transform: translateX(14px);
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
   background: #00d4ff;
+  border-radius: 999px;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.45);
+  pointer-events: none;
 }
-.mode-toggle.codex-active .mode-toggle-label.inactive { color: #00d4ff; }
-.mode-toggle.codex-active .mode-toggle-label.active  { color: #444; }
+.mode-toggle.codex-active .mode-toggle-indicator {
+  transform: translateX(100%);
+}
+.mode-toggle-segment {
+  position: relative;
+  z-index: 1;
+  padding: 12px 28px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #555;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.mode-toggle-segment.active {
+  color: #08080f;
+}
 
 /* Rank badge */
 .rank-badge-container {

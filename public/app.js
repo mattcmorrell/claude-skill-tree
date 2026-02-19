@@ -114,9 +114,9 @@
     toggle.id = 'modeToggle';
     toggle.className = 'mode-toggle' + (codexMode ? ' codex-active' : '');
     toggle.innerHTML = `
-      <span class="mode-toggle-label ${codexMode ? 'inactive' : 'active'}">Claude Code</span>
-      <div class="mode-toggle-pip"></div>
-      <span class="mode-toggle-label ${codexMode ? 'active' : 'inactive'}">Codex</span>
+      <div class="mode-toggle-indicator"></div>
+      <div class="mode-toggle-segment ${codexMode ? '' : 'active'}">Claude Code</div>
+      <div class="mode-toggle-segment ${codexMode ? 'active' : ''}">Codex</div>
     `;
     toggle.addEventListener('click', () => {
       codexMode = !codexMode;
