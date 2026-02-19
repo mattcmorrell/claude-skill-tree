@@ -303,15 +303,50 @@
   let progress = { skills: {}, totalCompleted: 0 };
   let previousCompleted = new Set();
   let selectedSkill = null;
+  let useLocalStorage = false;
 
+  // Detect if server API is available; fall back to localStorage for static deployments (Vercel)
   async function fetchSkills() {
-    const res = await fetch('/api/skills');
-    skills = await res.json();
+    try {
+      const res = await fetch('/api/skills');
+      if (!res.ok) throw new Error('not ok');
+      skills = await res.json();
+    } catch {
+      // Fallback: fetch static skills.json
+      const res = await fetch('/skills.json');
+      skills = await res.json();
+      useLocalStorage = true;
+    }
+  }
+
+  function loadLocalProgress() {
+    try {
+      const stored = localStorage.getItem('skill-tree-progress');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return { skills: {}, totalCompleted: 0, lastUpdated: null };
+  }
+
+  function saveLocalProgress() {
+    const validIds = new Set(skills.map(s => s.id));
+    progress.totalCompleted = Object.entries(progress.skills)
+      .filter(([id, s]) => s.completed && validIds.has(id)).length;
+    progress.lastUpdated = new Date().toISOString();
+    localStorage.setItem('skill-tree-progress', JSON.stringify(progress));
   }
 
   async function fetchProgress() {
-    const res = await fetch('/api/progress');
-    progress = await res.json();
+    if (useLocalStorage) {
+      progress = loadLocalProgress();
+      return;
+    }
+    try {
+      const res = await fetch('/api/progress');
+      progress = await res.json();
+    } catch {
+      useLocalStorage = true;
+      progress = loadLocalProgress();
+    }
   }
 
   // Locked if the previous level isn't fully completed
@@ -588,8 +623,23 @@
 
   async function toggleSkill(skillId) {
     const prevLevels = getCompletedLevels();
-    const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
-    progress = await res.json();
+
+    if (useLocalStorage) {
+      if (progress.skills[skillId]?.completed) {
+        delete progress.skills[skillId];
+      } else {
+        progress.skills[skillId] = {
+          completed: true,
+          timestamp: new Date().toISOString(),
+          detected_by: 'manual'
+        };
+      }
+      saveLocalProgress();
+    } else {
+      const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
+      progress = await res.json();
+    }
+
     document.getElementById('detailPanel').classList.remove('open');
     document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
     selectedSkill = null;
@@ -691,6 +741,7 @@
   }
 
   function startPolling() {
+    if (useLocalStorage) return; // No server to poll in static mode
     setInterval(async () => {
       try {
         const res = await fetch('/api/progress');
@@ -725,8 +776,13 @@
 
   document.getElementById('resetBtn').addEventListener('click', async () => {
     if (!confirm('Reset all progress? This can\'t be undone.')) return;
-    const res = await fetch('/api/reset', { method: 'POST' });
-    progress = await res.json();
+    if (useLocalStorage) {
+      progress = { skills: {}, totalCompleted: 0, lastUpdated: null };
+      saveLocalProgress();
+    } else {
+      const res = await fetch('/api/reset', { method: 'POST' });
+      progress = await res.json();
+    }
     previousCompleted = new Set();
     render();
   });
