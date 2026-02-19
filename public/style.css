@@ -541,28 +541,136 @@ body::before {
 .completion-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(8, 8, 15, 0.9);
+  background: radial-gradient(ellipse at center, rgba(8, 8, 25, 0.95) 0%, rgba(4, 4, 12, 0.98) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 500;
-  animation: fade-in 0.5s ease;
+  animation: completion-bg-in 1s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+@keyframes completion-bg-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.completion-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.completion-particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color);
+  animation: completion-particle-burst 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) var(--delay) both;
+}
+
+@keyframes completion-particle-burst {
+  0% { transform: translate(0, 0) scale(0); opacity: 0; }
+  20% { opacity: 1; transform: translate(calc(var(--px) * 0.3), calc(var(--py) * 0.3)) scale(1); }
+  100% { transform: translate(var(--px), var(--py)) scale(0); opacity: 0; }
+}
+
+.completion-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.completion-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.completion-ring-1 {
+  width: 300px;
+  height: 300px;
+  border-color: rgba(0, 212, 255, 0.3);
+  animation: completion-ring-expand 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.completion-ring-2 {
+  width: 500px;
+  height: 500px;
+  border-color: rgba(168, 85, 247, 0.2);
+  animation: completion-ring-expand 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+}
+
+.completion-ring-3 {
+  width: 700px;
+  height: 700px;
+  border-color: rgba(255, 215, 0, 0.1);
+  animation: completion-ring-expand 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s both;
+}
+
+@keyframes completion-ring-expand {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
 }
 
 .completion-message {
   text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.completion-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  animation: completion-icon-enter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+  filter: drop-shadow(0 0 40px rgba(0, 212, 255, 0.4));
+}
+
+.completion-icon svg {
+  width: 200px;
+  height: 200px;
+}
+
+@keyframes completion-icon-enter {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
 .completion-message h2 {
-  font-size: 32px;
+  font-size: 36px;
   color: #ffd700;
-  margin-bottom: 8px;
-  letter-spacing: 4px;
+  margin-bottom: 12px;
+  letter-spacing: 6px;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2);
+  animation: completion-text-enter 0.6s ease-out 0.6s both;
+}
+
+@keyframes completion-text-enter {
+  0% { transform: translateY(30px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 .completion-message p {
   font-size: 16px;
   color: #888;
+  letter-spacing: 1px;
+  animation: completion-text-enter 0.6s ease-out 0.9s both;
+}
+
+.completion-dismiss {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #444;
+  margin-top: 32px;
+  animation: completion-text-enter 0.6s ease-out 1.5s both;
 }
 
 /* Reset button */

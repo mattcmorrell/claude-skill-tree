@@ -661,9 +661,29 @@
     const overlay = document.createElement('div');
     overlay.className = 'completion-overlay';
     overlay.innerHTML = `
+      <div class="completion-particles">
+        ${Array.from({length: 40}, (_, i) => {
+          const angle = (i / 40) * 360;
+          const dist = 80 + Math.random() * 200;
+          const x = Math.cos(angle * Math.PI / 180) * dist;
+          const y = Math.sin(angle * Math.PI / 180) * dist;
+          const size = 2 + Math.random() * 4;
+          const delay = Math.random() * 0.8;
+          const colors = ['#ffd700', '#00d4ff', '#a855f7', '#00ff88', '#ff8800', '#fff'];
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          return `<div class="completion-particle" style="--px:${x}px;--py:${y}px;--size:${size}px;--delay:${delay}s;--color:${color}"></div>`;
+        }).join('')}
+      </div>
+      <div class="completion-rings">
+        <div class="completion-ring completion-ring-1"></div>
+        <div class="completion-ring completion-ring-2"></div>
+        <div class="completion-ring completion-ring-3"></div>
+      </div>
       <div class="completion-message">
+        <div class="completion-icon">${buildBadgeSvg(6)}</div>
         <h2>ALL SKILLS UNLOCKED</h2>
         <p>You've mastered Claude Code. Now go build something amazing.</p>
+        <div class="completion-dismiss">click anywhere to close</div>
       </div>
     `;
     overlay.addEventListener('click', () => overlay.remove());
