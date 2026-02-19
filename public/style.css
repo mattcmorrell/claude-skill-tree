@@ -263,7 +263,23 @@ body::before {
 
 .skill-card.locked {
   opacity: 0.4;
-  cursor: default;
+  cursor: pointer;
+}
+
+.skill-card.locked:hover {
+  opacity: 0.55;
+  transform: translateY(-2px);
+}
+
+.skill-card.selected {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+}
+
+.skill-card.locked.selected {
+  opacity: 0.6;
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
 }
 
 /* Color accent bar at top of card */

@@ -514,11 +514,15 @@
 
   // Open detail panel — positioned to the right of the clicked card
   function openDetail(skill) {
+    // Remove previous selected state
+    document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
+
     selectedSkill = skill;
     updateDetailPanel(skill);
 
     const panel = document.getElementById('detailPanel');
     const card = document.querySelector(`[data-skill-id="${skill.id}"]`);
+    if (card) card.classList.add('selected');
     const panelWidth = 320;
     const gap = 12;
 
@@ -580,6 +584,7 @@
 
   document.getElementById('detailClose').addEventListener('click', () => {
     document.getElementById('detailPanel').classList.remove('open');
+    document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
     selectedSkill = null;
   });
 
@@ -589,6 +594,7 @@
     if (panel.contains(e.target)) return;
     if (e.target.closest('.skill-card')) return;
     panel.classList.remove('open');
+    document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
     selectedSkill = null;
   });
 
@@ -597,6 +603,7 @@
     const res = await fetch(`/api/toggle/${skillId}`, { method: 'POST' });
     progress = await res.json();
     document.getElementById('detailPanel').classList.remove('open');
+    document.querySelectorAll('.skill-card.selected').forEach(c => c.classList.remove('selected'));
     selectedSkill = null;
     render();
   }
