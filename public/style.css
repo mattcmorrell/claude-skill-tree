@@ -262,8 +262,8 @@ body::before {
 }
 
 .skill-card.locked {
-  opacity: 0.35;
-  cursor: not-allowed;
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* Color accent bar at top of card */
@@ -313,25 +313,13 @@ body::before {
   opacity: 0.85;
 }
 
-/* Locked card redacted content */
-.card-locked-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-}
-
-.redacted-line {
-  height: 10px;
-  background: #2a2a3a;
-  border-radius: 4px;
-}
-
-.redacted-line:first-child {
-  height: 14px;
-  border-radius: 50%;
-  width: 40px !important;
+/* Lock icon for locked cards */
+.card-lock {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 /* Recommended card — subtle cyan pulse */

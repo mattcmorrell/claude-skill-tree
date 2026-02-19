@@ -76,6 +76,22 @@
     }
   },
   {
+    "id": "iterate-on-styling",
+    "name": "Iterate on Styling",
+    "branch": "foundations",
+    "color": "#2dd4bf",
+    "difficulty": "beginner",
+    "level": 2,
+    "tryIt": "Try saying: 'Make the header bigger, add more padding, and change the accent color to blue'",
+    "prerequisites": [],
+    "description": "Tell Claude to tweak colors, spacing, fonts, and layout. This is the bread and butter of working with Claude — describe what you want changed and watch it update the code in real time.",
+    "detection": {
+      "tool_name_pattern": "Edit",
+      "command_patterns": [],
+      "file_patterns": ["\\.(css|scss|less|html|jsx|tsx)$"]
+    }
+  },
+  {
     "id": "change-claude-model",
     "name": "Change Your Claude Model",
     "branch": "mastery",

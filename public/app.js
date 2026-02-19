@@ -32,6 +32,7 @@
     'describe-and-build': 'M3 3h14v14H3V3zm3 4h8M6 9h8M6 11h5',
     'run-dev-server': 'M6 3l12 7-12 7V3z',
     'use-screenshots': 'M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm4 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM2 14l4-4 3 3 4-4 5 5',
+    'iterate-on-styling': 'M3 3h14v14H3V3zM7 7h2v2H7V7zM11 7h2v2h-2V7zM7 11h6v2H7v-2z',
     'change-claude-model': 'M10 2a8 8 0 100 16 8 8 0 000-16zM10 6v4l3 2',
     'setup-github': 'M10 1C5 1 1 5 1 10c0 4 2.5 7.3 6 8.5.4.1.6-.2.6-.4v-1.5c-2.4.5-3-1.2-3-1.2-.4-1-1-1.3-1-1.3-.8-.5.1-.5.1-.5.9.1 1.4.9 1.4.9.8 1.3 2 1 2.5.7.1-.6.3-1 .5-1.2-2-.2-4-1-4-4.4 0-1 .3-1.8.9-2.4-.1-.2-.4-1.1.1-2.4 0 0 .7-.2 2.5 1a8.4 8.4 0 014.4 0c1.7-1.2 2.5-1 2.5-1 .5 1.3.2 2.2.1 2.4.5.6.9 1.4.9 2.4 0 3.4-2 4.2-4 4.4.3.3.6.8.6 1.7v2.5c0 .3.2.5.6.4 3.5-1.2 6-4.5 6-8.5 0-5-4-9-9-9z',
     'clone-bhr-template': 'M10 2v10M6 8l4 4 4-4M3 14v2a2 2 0 002 2h10a2 2 0 002-2v-2',
@@ -52,12 +53,12 @@
 
   const RANK_COLORS = ['#33334a', '#2dd4bf', '#3b82f6', '#a855f7', '#ff8800', '#ffd700', '#00d4ff'];
 
-  // Thresholds align with completing each level (21 skills, levels 0-7)
+  // Thresholds align with completing each level (22 skills, levels 0-7)
   function getCurrentRankIndex(completed) {
-    if (completed >= 21) return 6;
-    if (completed >= 18) return 5;
-    if (completed >= 14) return 4;
-    if (completed >= 10) return 3;
+    if (completed >= 22) return 6;
+    if (completed >= 19) return 5;
+    if (completed >= 15) return 4;
+    if (completed >= 11) return 3;
     if (completed >= 6)  return 2;
     if (completed >= 1)  return 1;
     return 0;
@@ -370,67 +371,59 @@
     accent.style.background = state === 'locked' ? '#333' : skill.color;
     card.appendChild(accent);
 
-    if (state === 'locked') {
-      // Redacted placeholder content
-      const lockedContent = document.createElement('div');
-      lockedContent.className = 'card-locked-content';
-      for (let i = 0; i < 4; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'redacted-line';
-        if (i === 0) bar.style.width = '40px';
-        else if (i === 1) bar.style.width = '90%';
-        else if (i === 2) bar.style.width = '70%';
-        else bar.style.width = '50%';
-        lockedContent.appendChild(bar);
-      }
-      card.appendChild(lockedContent);
-    } else {
-      // Icon
-      if (SKILL_ICONS[skill.id]) {
-        const iconWrap = document.createElement('div');
-        iconWrap.className = 'card-icon';
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 0 20 20');
-        svg.setAttribute('width', '24');
-        svg.setAttribute('height', '24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', SKILL_ICONS[skill.id]);
-        path.setAttribute('stroke', state === 'completed' ? skill.color : '#00d4ff');
-        path.setAttribute('stroke-width', '1.5');
-        path.setAttribute('fill', 'none');
-        svg.appendChild(path);
-        iconWrap.appendChild(svg);
-        card.appendChild(iconWrap);
-      }
-
-      // Name
-      const name = document.createElement('div');
-      name.className = 'card-name';
-      name.textContent = skill.name;
-      card.appendChild(name);
-
-      // Branch label
-      const branch = document.createElement('div');
-      branch.className = 'card-branch';
-      branch.textContent = BRANCH_LABELS[skill.branch] || skill.branch;
-      branch.style.color = skill.color;
-      card.appendChild(branch);
-
-      // Checkmark for completed
-      if (state === 'completed') {
-        const check = document.createElement('div');
-        check.className = 'card-check';
-        check.textContent = '✓';
-        check.style.color = skill.color;
-        card.appendChild(check);
-      }
-
-      // Click handler
-      card.addEventListener('click', () => openDetail(skill));
+    // Icon
+    if (SKILL_ICONS[skill.id]) {
+      const iconWrap = document.createElement('div');
+      iconWrap.className = 'card-icon';
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 20 20');
+      svg.setAttribute('width', '24');
+      svg.setAttribute('height', '24');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('stroke-linecap', 'round');
+      svg.setAttribute('stroke-linejoin', 'round');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', SKILL_ICONS[skill.id]);
+      path.setAttribute('stroke', state === 'completed' ? skill.color : state === 'locked' ? '#333' : '#00d4ff');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('fill', 'none');
+      svg.appendChild(path);
+      iconWrap.appendChild(svg);
+      card.appendChild(iconWrap);
     }
+
+    // Name
+    const name = document.createElement('div');
+    name.className = 'card-name';
+    name.textContent = skill.name;
+    card.appendChild(name);
+
+    // Branch label
+    const branch = document.createElement('div');
+    branch.className = 'card-branch';
+    branch.textContent = BRANCH_LABELS[skill.branch] || skill.branch;
+    branch.style.color = state === 'locked' ? '#333' : skill.color;
+    card.appendChild(branch);
+
+    // Lock icon for locked
+    if (state === 'locked') {
+      const lock = document.createElement('div');
+      lock.className = 'card-lock';
+      lock.textContent = '🔒';
+      card.appendChild(lock);
+    }
+
+    // Checkmark for completed
+    if (state === 'completed') {
+      const check = document.createElement('div');
+      check.className = 'card-check';
+      check.textContent = '✓';
+      check.style.color = skill.color;
+      card.appendChild(check);
+    }
+
+    // Click handler (all states — locked shows locked detail)
+    card.addEventListener('click', () => openDetail(skill));
 
     return card;
   }
